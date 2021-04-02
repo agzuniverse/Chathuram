@@ -25,6 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install ESlint
-        run: npm i -g eslint
+        run: npm i eslint
       - name: Run ESlint
         run: eslint ./src/client --config ./src/client/.eslintrc.js --ext .js,.jsx,.ts,.tsx
