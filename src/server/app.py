@@ -40,26 +40,30 @@ def login(data):
             return make_response('Could not verify', 401, {'WWW-authenticate': 'basic realm="Login Required"'})
     return make_response('Could not verify', 401, {'WWW-authenticate': 'basic realm="Login Required"'})
 
-@app.route('/data', methods=['GET'])
+@app.route("/data", methods=["GET"])
 def get_bulk_data():
     return {"data": "BULK DATA"}
 
-@app.route('/data/<id>', methods=['GET'])
+
+@app.route("/data/<id>", methods=["GET"])
 def get_single_data(id):
     return {"data": id}
 
-@app.route('/data', methods=['POST'])
+
+@app.route("/data", methods=["POST"])
 def post_data():
     return {"data": "RECORD CREATED"}
 
-@app.route('/data/<id>', methods=['PUT'])
+
+@app.route("/data/<id>", methods=["PUT"])
 def update_data(id):
     return {"data": "DATA UPDATED"}
 
-@app.route('/data/<id>', methods=['DELETE'])
+
+@app.route("/data/<id>", methods=["DELETE"])
 def delete_data(id):
     return {"data": "DATA DELETED"}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
