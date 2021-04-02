@@ -22,9 +22,12 @@ jobs:
           extra-flake8-options: "--config=./src/server/setup.cfg"
   jslint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/client
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
         run: yarn
       - name: Run ESlint
-        run: yarn run eslint ./src/client --config ./src/client/.eslintrc.js --ext .js,.jsx,.ts,.tsx
+        run: yarn run eslint --ext .js,.jsx,.ts,.tsx
