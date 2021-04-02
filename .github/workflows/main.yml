@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint:
+  pythonlint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,3 +20,11 @@ jobs:
           use-mypy: false
           use-isort: true
           extra-flake8-options: "--config=./src/server/setup.cfg"
+  jslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install ESlint
+        run: npm i -g eslint
+      - name: Run ESlint
+        run: eslint ./src/client --config ./src/client/.eslintrc.js --ext .js,.jsx,.ts,.tsx
