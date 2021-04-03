@@ -5,20 +5,20 @@ import datetime
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'projectudap'
+app.config["SECRET_KEY"] = "projectudap"
 
 # Config MySQL
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'arun'
-app.config['MYSQL_PASSWORD'] = 'pass'
-app.config['MYSQL_DB'] = 'myflaskapp'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+app.config["MYSQL_HOST"] = "localhost"
+app.config["MYSQL_USER"] = "arun"
+app.config["MYSQL_PASSWORD"] = "pass"
+app.config["MYSQL_DB"] = "myflaskapp"
+app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 # init MYSQL
 mysql = MySQL(app)
 
 
-@app.route('/login', methods=['POST'])
+@app.route("/login", methods=["POST"])
 def login(data):
     username = data.username
     password_candidate = data.password
@@ -28,17 +28,29 @@ def login(data):
 
     if res > 0:
         data = cur.fetchone()
-        password = data['password']
+        password = data["password"]
 
-        #Decrypt password
+        # Decrypt password
 
         if password_candidate == password:
-            token = jwt.encode({'id': data['id'], 'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=30)},
-                               app.config['SECRET_KEY'])
-            return {"token": token.decode('UTF-8')}
+            token = jwt.encode(
+                {
+                    "id": data["id"],
+                    "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
+                },
+                app.config["SECRET_KEY"],
+            )
+            return {"token": token.decode("UTF-8")}
         else:
-            return make_response('Could not verify', 401, {'WWW-authenticate': 'basic realm="Login Required"'})
-    return make_response('Could not verify', 401, {'WWW-authenticate': 'basic realm="Login Required"'})
+            return make_response(
+                "Could not verify",
+                401,
+                {"WWW-authenticate": 'basic realm="Login Required"'},
+            )
+    return make_response(
+        "Could not verify", 401, {"WWW-authenticate": 'basic realm="Login Required"'}
+    )
+
 
 @app.route("/data", methods=["GET"])
 def get_bulk_data():
