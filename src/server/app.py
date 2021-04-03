@@ -13,8 +13,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv()
 
 # Init database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://' + os.path.join(basedir, 'db.mysql')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://" + os.path.join(basedir, "db.mysql")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
