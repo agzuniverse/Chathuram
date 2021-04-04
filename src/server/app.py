@@ -1,5 +1,9 @@
 from flask import Flask, request, make_response
-from flask_sqlalchemy import SQLAlchemy
+
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
+
 from dotenv import load_dotenv
 import jwt
 import datetime
@@ -13,9 +17,25 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv()
 
 # Init database
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://admin:pass@127.0.0.1:3306"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
+engine = create_engine("mysql+pymysql://admin:password@127.0.0.1:3306/test")
+
+# Use automap to read tables from the database
+Base = automap_base()
+# Create classes that map to the tables
+# This only works for tables that have a primary key
+Base.prepare(engine, reflect=True)
+
+session = Session(engine)
+
+# Print all tables in the db
+print(engine.table_names())
+
+# Sample is the name of a table in the db with columns "name" and "age"
+smp = Base.classes.sample
+# Print all rows in sample
+temp = session.query(smp).all()
+for t in temp:
+    print(t.name, t.age)
 
 
 @app.route("/login")
