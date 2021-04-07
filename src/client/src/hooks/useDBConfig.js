@@ -18,7 +18,7 @@ export default function useDBConfig() {
     };
 
     return {
-        setDBConfig: setDBConfig,
+        setDBConfig: saveDBConfig,
         dbConfig
     }
 }
