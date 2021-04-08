@@ -27,8 +27,17 @@ Base.prepare(engine, reflect=True)
 
 session = Session(engine)
 
-# Print all tables in the db
-print(engine.table_names())
+
+# Return list of  all tables in the db
+def get_tables_in_db():
+    return engine.table_names()
+
+
+# Establish connection:
+def establish_connection(username, password, url, port, db_name, db_type):
+    # TODO
+    pass
+
 
 # Sample is the name of a table in the db with columns "name" and "age"
 smp = Base.classes.sample
@@ -69,14 +78,24 @@ def login():
 @app.route("/db-config", methods=["POST"])
 def db_config():
     data = request.get_json()
-    username = data["username"]
-    password = data["password"]
-    url = data["url"]
-    port = data["port"]
-    db_name = data["db_name"]
-    db_type = data["db_type"]
-    print(username, password, url, port, db_name, db_type)
-    return {"data": "SUCCESS!!!"}
+    username = data.get("username")
+    password = data.get("password")
+    url = data.get("url")
+    port = data.get("port")
+    db_name = data.get("db_name")
+    db_type = data.get("db_type")
+
+    # Bad request
+    if None in [username, password, url, port, db_name, db_type]:
+        return {"error": "All required values not specified"}, 400
+
+    # Internal server error
+    if not establish_connection(username, password, url, port, db_name, db_type):
+        return {"error": "Failed to establish connection with the DB"}, 500
+
+    # On successful connection, return list of tables in the DB
+    tables = get_tables_in_db()
+    return {"tables": tables}, 200
 
 
 @app.route("/data", methods=["GET"])
