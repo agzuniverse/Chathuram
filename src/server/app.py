@@ -66,6 +66,19 @@ def login():
         )
 
 
+@app.route("/db-config", methods=["POST"])
+def db_config():
+    data = request.get_json()
+    username = data["username"]
+    password = data["password"]
+    url = data["url"]
+    port = data["port"]
+    db_name = data["db_name"]
+    db_type = data["db_type"]
+    print(username, password, url, port, db_name, db_type)
+    return {"data": "SUCCESS!!!"}
+
+
 @app.route("/data", methods=["GET"])
 def get_bulk_data():
     return {"data": "BULK DATA"}
