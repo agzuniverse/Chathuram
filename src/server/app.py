@@ -17,34 +17,46 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv()
 
 # Init database
-engine = create_engine("mysql+pymysql://admin:password@127.0.0.1:3306/test")
+# engine = create_engine("mysql+pymysql://admin:password@127.0.0.1:3306/test")
+engine = None
+session = None
 
 # Use automap to read tables from the database
 Base = automap_base()
-# Create classes that map to the tables
-# This only works for tables that have a primary key
-Base.prepare(engine, reflect=True)
-
-session = Session(engine)
 
 
-# Return list of  all tables in the db
+# Return list of all tables in the db
 def get_tables_in_db():
     return engine.table_names()
 
 
+# Choose the correct driver
+def pick_db_driver(db_type):
+    if db_type == "mysql":
+        return "mysql+pymysql"
+
+
 # Establish connection:
 def establish_connection(username, password, url, port, db_name, db_type):
-    # TODO
-    pass
+    global engine, session
+    db_driver = pick_db_driver(db_type)
+    engine = create_engine(
+        "{0}://{1}:{2}@{3}:{4}/{5}".format(
+            db_driver, username, password, url, port, db_name
+        )
+    )
+    # Create classes that map to the tables
+    # This only works for tables that have a primary key
+    Base.prepare(engine, reflect=True)
+    session = Session(engine)
 
-
-# Sample is the name of a table in the db with columns "name" and "age"
-smp = Base.classes.sample
-# Print all rows in sample
-temp = session.query(smp).all()
-for t in temp:
-    print(t.name, t.age)
+    # Test
+    # Sample is the name of a table in the db with columns "name" and "age"
+    smp = Base.classes.sample
+    # Print all rows in sample
+    temp = session.query(smp).all()
+    for t in temp:
+        print(t.name, t.age)
 
 
 @app.route("/login")
