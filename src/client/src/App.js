@@ -7,6 +7,7 @@ import Login from './components/Login';
 import ConfigForm from './components/ConfigForm';
 import useToken from './hooks/useToken';
 import useDBConfig from './hooks/useDBConfig';
+import Header from './components/Header';
 
 const App = () => {
   const { token, setToken } = useToken();
@@ -22,6 +23,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <Header />
       <BrowserRouter>
         <Switch>
           <Route path="/dashboard">
