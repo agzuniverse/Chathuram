@@ -1,16 +1,8 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { loginUser } from '../api';
 
-async function loginUser(credentials) {
-    // return fetch('http://localhost:8080/login', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(credentials)
-    // }).then(data => data.json())
-    return { 'token': 'asdfsdfsadf' }
-}
+
 
 const Login = ({ setToken }) => {
     const [username, setUserName] = useState();
