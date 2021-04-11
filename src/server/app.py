@@ -15,7 +15,7 @@ import random
 # Init app
 app = Flask(__name__)
 cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv()
@@ -67,8 +67,8 @@ def establish_connection(username, password, url, port, db_name, db_type):
 @cross_origin()
 def login():
     data = request.get_json()
-    username_candidate = data['username']
-    password_candidate = data['password']
+    username_candidate = data["username"]
+    password_candidate = data["password"]
 
     # Decrypt password here
 
