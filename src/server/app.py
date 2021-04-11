@@ -3,6 +3,8 @@ from flask import Flask, request, make_response
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
+from flask_cors import CORS, cross_origin
+
 
 from dotenv import load_dotenv
 import jwt
@@ -12,6 +14,8 @@ import random
 
 # Init app
 app = Flask(__name__)
+cors = CORS(app)
+app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv()
@@ -59,17 +63,19 @@ def establish_connection(username, password, url, port, db_name, db_type):
         print(t.name, t.age)
 
 
-@app.route("/login")
+@app.route("/login", methods=["POST"])
+@cross_origin()
 def login():
-    data = request.authorization
-    username_candidate = data.username
-    password_candidate = data.password
+    data = request.get_json()
+    username_candidate = data["username"]
+    password_candidate = data["password"]
 
     # Decrypt password here
 
     username = os.getenv("LOGIN_USERNAME")
     password = os.getenv("LOGIN_PASSWORD")
 
+    print(username, username_candidate, password, password_candidate)
     if username_candidate == username and password_candidate == password:
         token = jwt.encode(
             {

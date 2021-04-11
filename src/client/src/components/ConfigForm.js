@@ -1,18 +1,9 @@
 import React, { useState } from 'react';
+import { setConfig } from '../api';
 import { Form, Button, Container, Card } from 'react-bootstrap';
 import Header from './Header';
 import '../css/forms.css'
 
-async function setConfig(config) {
-    // return fetch('http://localhost:8080/config', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(credentials)
-    // }).then(data => data.json())
-    return config;
-}
 
 const ConfigForm = ({ setDBConfig }) => {
     const [url, setURL] = useState();
