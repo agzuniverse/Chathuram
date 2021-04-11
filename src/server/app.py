@@ -25,9 +25,6 @@ engine = None
 session = None
 insp = None
 
-# Use automap to read tables from the database - temperorily disabled
-# Base = automap_base()
-
 
 # Return list of all tables in the db
 def get_tables_in_db():
@@ -128,9 +125,9 @@ def db_config():
 def get_table_metadata():
     data = request.get_json()
     table = data.get("table")
-    metadata = get_metadata(table)
-    if metadata is None:
+    if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
+    metadata = get_metadata(table)
     return {"metadata": metadata}, 200
 
 
