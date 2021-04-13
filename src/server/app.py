@@ -128,6 +128,9 @@ def get_table_metadata():
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
     metadata = get_metadata(table)
+    # Column types are non-json serializable objects
+    for col in metadata:
+        col["type"] = str(col["type"])
     return {"metadata": metadata}, 200
 
 
