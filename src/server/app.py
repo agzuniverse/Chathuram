@@ -131,29 +131,32 @@ def get_table_metadata():
     return {"metadata": metadata}, 200
 
 
-@app.route("/data", methods=["GET"])
-def get_bulk_data():
-    return {"data": "BULK DATA"}
+@app.route("/meta/create", methods=["POST"])
+def create_table_data():
+    data = request.get_json()
+    print(data)
+    # Create table data here
+    return {"message": "Successfully Created"}, 200
 
 
-@app.route("/data/<id>", methods=["GET"])
-def get_single_data(id):
-    return {"data": id}
+@app.route("/meta/edit", methods=["POST"])
+def update_table_data():
+    data = request.get_json()
+    table = data.get("table")
+    if table not in get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+    # Update table data here
+    return {"message": "Successfully Edited"}, 200
 
 
-@app.route("/data", methods=["POST"])
-def post_data():
-    return {"data": "RECORD CREATED"}
-
-
-@app.route("/data/<id>", methods=["PUT"])
-def update_data(id):
-    return {"data": "DATA UPDATED"}
-
-
-@app.route("/data/<id>", methods=["DELETE"])
-def delete_data(id):
-    return {"data": "DATA DELETED"}
+@app.route("/meta/delete", methods=["POST"])
+def delete_table_data():
+    data = request.get_json()
+    table = data.get("table")
+    if table not in get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+    # Delete metadata here
+    return {"message": "Successfully Deleted"}, 200
 
 
 if __name__ == "__main__":
