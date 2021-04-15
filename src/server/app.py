@@ -93,7 +93,7 @@ def login():
         )
 
 
-@app.route("/db-config", methods=["POST"])
+@app.route("/config", methods=["POST"])
 def db_config():
     data = request.get_json()
     username = data.get("username")
