@@ -99,6 +99,7 @@ def login():
 
 
 @app.route("/db-config", methods=["POST"])
+@cross_origin()
 def db_config():
     data = request.get_json()
     username = data.get("username")
@@ -122,6 +123,7 @@ def db_config():
 
 
 @app.route("/meta", methods=["POST"])
+@cross_origin()
 def get_table_metadata():
     data = request.get_json()
     table = data.get("table")
