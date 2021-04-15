@@ -98,12 +98,7 @@ def login():
         )
 
 
-<<<<<<< HEAD
-@app.route("/db-config", methods=["POST"])
-@cross_origin()
-=======
 @app.route("/config", methods=["POST"])
->>>>>>> 38e30bc827a38dcbaccd02dec4429ee343255d5e
 def db_config():
     data = request.get_json()
     username = data.get("username")
