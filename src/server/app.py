@@ -1,10 +1,9 @@
 from flask import Flask, request, make_response
 
-from sqlalchemy.ext.automap import automap_base
+# from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
 from flask_cors import CORS, cross_origin
-
+from sqlalchemy import create_engine, inspect
 
 from dotenv import load_dotenv
 import jwt
@@ -24,14 +23,17 @@ load_dotenv()
 # engine = create_engine("mysql+pymysql://admin:password@127.0.0.1:3306/test")
 engine = None
 session = None
-
-# Use automap to read tables from the database
-Base = automap_base()
+insp = None
 
 
 # Return list of all tables in the db
 def get_tables_in_db():
     return engine.table_names()
+
+
+# Return column metadata associated with a certain table
+def get_metadata(table):
+    return insp.get_columns(table)
 
 
 # Choose the correct driver
@@ -42,25 +44,28 @@ def pick_db_driver(db_type):
 
 # Establish connection:
 def establish_connection(username, password, url, port, db_name, db_type):
-    global engine, session
+    global engine, session, insp
     db_driver = pick_db_driver(db_type)
     engine = create_engine(
         "{0}://{1}:{2}@{3}:{4}/{5}".format(
             db_driver, username, password, url, port, db_name
         )
     )
+    session = Session(engine)
+    insp = inspect(engine)
+    print(insp.get_table_names())
+    return True
+
     # Create classes that map to the tables
     # This only works for tables that have a primary key
-    Base.prepare(engine, reflect=True)
-    session = Session(engine)
-
+    # Base.prepare(engine, reflect=True)
     # Test
     # Sample is the name of a table in the db with columns "name" and "age"
-    smp = Base.classes.sample
+    # smp = Base.classes.sample
     # Print all rows in sample
-    temp = session.query(smp).all()
-    for t in temp:
-        print(t.name, t.age)
+    # temp = session.query(smp).all()
+    # for t in temp:
+    # print(t.name, t.age)
 
 
 @app.route("/login", methods=["POST"])
@@ -116,29 +121,45 @@ def db_config():
     return {"tables": tables}, 200
 
 
-@app.route("/data", methods=["GET"])
-def get_bulk_data():
-    return {"data": "BULK DATA"}
+@app.route("/meta", methods=["POST"])
+def get_table_metadata():
+    data = request.get_json()
+    table = data.get("table")
+    if table not in get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+    metadata = get_metadata(table)
+    # Column types are non-json serializable objects
+    for col in metadata:
+        col["type"] = str(col["type"])
+    return {"metadata": metadata}, 200
 
 
-@app.route("/data/<id>", methods=["GET"])
-def get_single_data(id):
-    return {"data": id}
+@app.route("/meta/create", methods=["POST"])
+def create_table_data():
+    data = request.get_json()
+    print(data)
+    # Create table data here
+    return {"message": "Successfully Created"}, 200
 
 
-@app.route("/data", methods=["POST"])
-def post_data():
-    return {"data": "RECORD CREATED"}
+@app.route("/meta/edit", methods=["POST"])
+def update_table_data():
+    data = request.get_json()
+    table = data.get("table")
+    if table not in get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+    # Update table data here
+    return {"message": "Successfully Edited"}, 200
 
 
-@app.route("/data/<id>", methods=["PUT"])
-def update_data(id):
-    return {"data": "DATA UPDATED"}
-
-
-@app.route("/data/<id>", methods=["DELETE"])
-def delete_data(id):
-    return {"data": "DATA DELETED"}
+@app.route("/meta/delete", methods=["POST"])
+def delete_table_data():
+    data = request.get_json()
+    table = data.get("table")
+    if table not in get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+    # Delete metadata here
+    return {"message": "Successfully Deleted"}, 200
 
 
 if __name__ == "__main__":
