@@ -8,6 +8,7 @@ import ConfigForm from './components/ConfigForm';
 import useToken from './hooks/useToken';
 import useDBConfig from './hooks/useDBConfig';
 import Header from './components/Header';
+import AddToDBTable from './components/AddDataToDBTable';
 
 const App = () => {
   const { token, setToken } = useToken();
@@ -28,6 +29,7 @@ const App = () => {
         <Switch>
           <Route path="/dashboard">
             <Table />
+            <AddToDBTable />
           </Route>
         </Switch>
       </BrowserRouter>
