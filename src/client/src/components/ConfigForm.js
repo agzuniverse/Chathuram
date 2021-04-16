@@ -6,16 +6,23 @@ import '../css/forms.css'
 
 
 const ConfigForm = ({ setDBConfig }) => {
-    const [url, setURL] = useState();
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
+    const [url, setURL] = useState();
+    const [port, setPort] = useState();
+    const [db_name, setDBName] = useState();
+    const [db_type, setDBType] = useState();
+
 
     const handleSubmit = async e => {
         e.preventDefault();
         const res = await setConfig({
-            url,
             username,
-            password
+            password,
+            url,
+            port,
+            db_name,
+            db_type
         });
         setDBConfig(res);
     }
@@ -27,18 +34,29 @@ const ConfigForm = ({ setDBConfig }) => {
                 <Card>
                     <Card.Body>
                         <Form>
+                            <Form.Group>
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control type="text" placeholder="Enter username" onChange={e => setUserName(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicPassword">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
+                            </Form.Group>
                             <Form.Group controlId="formURL">
                                 <Form.Label>DB URL</Form.Label>
                                 <Form.Control type="text" placeholder="Enter DB URL" onChange={e => setURL(e.target.value)} />
                             </Form.Group>
-                            <Form.Group controlId="formBasicEmail">
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email" onChange={e => setUserName(e.target.value)} />
+                            <Form.Group>
+                                <Form.Label>Port</Form.Label>
+                                <Form.Control type="text" placeholder="Enter port" onChange={e => setPort(e.target.value)} />
                             </Form.Group>
-
-                            <Form.Group controlId="formBasicPassword">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
+                            <Form.Group>
+                                <Form.Label>DB Name</Form.Label>
+                                <Form.Control type="text" placeholder="Enter DB Name" onChange={e => setDBName(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>DB Type</Form.Label>
+                                <Form.Control type="text" placeholder="Enter DB Type" onChange={e => setDBType(e.target.value)} />
                             </Form.Group>
 
                             <Button variant="light" type="submit" onClick={handleSubmit} className="full-btn">

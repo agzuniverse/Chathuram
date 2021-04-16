@@ -122,6 +122,7 @@ def db_config():
 
 
 @app.route("/meta", methods=["POST"])
+@cross_origin()
 def get_table_metadata():
     data = request.get_json()
     table = data.get("table")
