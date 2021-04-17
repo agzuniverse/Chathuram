@@ -131,7 +131,6 @@ def login():
         )
 
 
-
 @app.route("/config", methods=["POST"])
 @cross_origin()
 @token_required
