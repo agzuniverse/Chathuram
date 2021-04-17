@@ -1,4 +1,4 @@
-const api = "http://127.0.0.1:5000"
+const api = "http://127.0.0.1:5000";
 
 export async function loginUser(credentials) {
     return fetch(`${api}/login`, {
@@ -16,6 +16,16 @@ export async function setConfig(config) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(credentials)
+        body: JSON.stringify(config)
+    }).then(data => data.json())
+}
+
+export async function addData(tableName) {
+    return fetch(`${api}/meta`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(tableName)
     }).then(data => data.json())
 }

@@ -25,9 +25,9 @@ const Login = ({ setToken }) => {
                 <Card>
                     <Card.Body>
                         <Form>
-                            <Form.Group controlId="formBasicEmail">
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email" onChange={e => setUserName(e.target.value)} />
+                            <Form.Group>
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control type="text" placeholder="Enter username" onChange={e => setUserName(e.target.value)} />
                             </Form.Group>
 
                             <Form.Group controlId="formBasicPassword">
