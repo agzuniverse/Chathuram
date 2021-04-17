@@ -4,6 +4,7 @@ from flask import Flask, request, make_response
 from sqlalchemy.orm import Session
 from flask_cors import CORS, cross_origin
 from sqlalchemy import create_engine, inspect
+from sqlalchemy.types import TypeEngine
 
 from dotenv import load_dotenv
 import jwt
@@ -25,15 +26,22 @@ engine = None
 session = None
 insp = None
 
-
-# Return list of all tables in the db
+# Return list of all tables in the sdb
 def get_tables_in_db():
     return engine.table_names()
 
 
+def get_column(self, table_name, schema=None, **kw):
+    with self._operation_context() as conn:
+            col_defs = self.dialect.get_columns(
+                conn, table_name, schema, info_cache=self.info_cache, **kw
+            )
+    print(col_defs)
+    return col_defs
+
 # Return column metadata associated with a certain table
 def get_metadata(table):
-    return insp.get_columns(table)
+    return get_column(insp, table)
 
 
 # Choose the correct driver
@@ -132,6 +140,7 @@ def get_table_metadata():
     # Column types are non-json serializable objects
     for col in metadata:
         col["type"] = str(col["type"])
+        col["value"] = "" if col["default"] is None else col["default"]
     return {"metadata": metadata}, 200
 
 
