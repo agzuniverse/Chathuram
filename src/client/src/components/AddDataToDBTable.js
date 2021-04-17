@@ -76,11 +76,12 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
         />);
 }
 
-const fetchMetadata = () => {
+const fetchMetadata = async () => {
     const test = addData({
         "table": "users"
     });
-    console.log(test);
+    const metadata = await test.then(data => data.metadata)
+    return metadata
 }
 
 const addValuePropertyToMetadata = (props) => {
@@ -96,26 +97,24 @@ const addValuePropertyToMetadata = (props) => {
     return props
 }
 const AddToDBTable = (props) => {
-    // fetch api
-    // fetchMetadata();
+   
     const [elements, setElements] = useState(null);
     useEffect(() => {
-        setElements(addValuePropertyToMetadata(props))
+        fetchMetadata().then(data => setElements(data))
     }, []);
 
-    const { metadata } = elements ?? {}
     const handleSave = (event) => {
         event.preventDefault();
         console.log(elements)
     }
 
     const handleChange = (elementToChange, event) => {
-        const newElements = { ...elements }
-        newElements.metadata.forEach(element => {
+        const newElements = [...elements]
+        newElements.forEach(element => {
             const { type, name } = element
             if (elementToChange === name) {
                 switch (type) {
-                    case "tinyint":
+                    case "TINYINT":
                         element["value"] = event.target.checked;
                         break;
                     default:
@@ -130,7 +129,7 @@ const AddToDBTable = (props) => {
         <FormContext.Provider value={{ handleChange }}>
             <Form>
                 <Container>
-                    {metadata ? metadata.map((column, index) => {
+                    {elements ? elements.map((column, index) => {
                         const formType = getInputType(column.type.toLowerCase())
                         const maxLength = getMaxLength(column.type);
                         const value = column.value ? column.value : null
