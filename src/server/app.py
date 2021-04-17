@@ -1,4 +1,5 @@
 from flask import Flask, request, make_response
+from functools import wraps
 
 # from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -10,7 +11,6 @@ from dotenv import load_dotenv
 import jwt
 import datetime
 import os
-import random
 
 # Init app
 app = Flask(__name__)
@@ -26,6 +26,29 @@ load_dotenv()
 engine = None
 session = None
 insp = None
+
+
+# Decorator to check for token
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if "x-access-token" in request.headers:
+            token = request.headers["x-access-token"]
+        if not token:
+            return {"message": "Token is missing!"}, 401
+        try:
+            data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
+            username = data["username"]
+            if username != os.getenv("LOGIN_USERNAME"):
+                return {"message": "Token is invalid!"}, 401
+        except jwt.exceptions.InvalidSignatureError:
+            return {"message": "Token is invalid!"}, 401
+        except KeyError:
+            return {"message": "Token is invalid!"}, 401
+        return f(*args, **kwargs)
+
+    return decorated
 
 
 # Return list of all tables in the db
@@ -89,10 +112,11 @@ def login():
     if username_candidate == username and password_candidate == password:
         token = jwt.encode(
             {
-                "id": random.randint(0, 1000),
+                "username": username,
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
             },
             app.config["SECRET_KEY"],
+            algorithm="HS256",
         )
         return {"token": token}
     else:
@@ -104,6 +128,7 @@ def login():
 
 
 @app.route("/config", methods=["POST"])
+@cors_origin()
 def db_config():
     data = request.get_json()
     username = data.get("username")
@@ -128,6 +153,7 @@ def db_config():
 
 @app.route("/meta", methods=["POST"])
 @cross_origin()
+@token_required
 def get_table_metadata():
     data = request.get_json()
     table = data.get("table")
@@ -141,6 +167,8 @@ def get_table_metadata():
 
 
 @app.route("/meta/create", methods=["POST"])
+@cross_origin()
+@token_required
 def create_table_data():
     data = request.get_json()
     print(data)
@@ -149,6 +177,8 @@ def create_table_data():
 
 
 @app.route("/meta/edit", methods=["POST"])
+@cross_origin()
+@token_required
 def update_table_data():
     data = request.get_json()
     table = data.get("table")
@@ -159,6 +189,8 @@ def update_table_data():
 
 
 @app.route("/meta/delete", methods=["POST"])
+@cross_origin()
+@token_required
 def delete_table_data():
     data = request.get_json()
     table = data.get("table")
