@@ -4,7 +4,6 @@ from flask import Flask, request, make_response
 from sqlalchemy.orm import Session
 from flask_cors import CORS, cross_origin
 from sqlalchemy import create_engine, inspect
-from sqlalchemy.types import TypeEngine
 
 from dotenv import load_dotenv
 import jwt
@@ -25,6 +24,7 @@ load_dotenv()
 engine = None
 session = None
 insp = None
+
 
 # Return list of all tables in the sdb
 def get_tables_in_db():
