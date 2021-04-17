@@ -4,6 +4,7 @@ from flask import Flask, request, make_response
 from sqlalchemy.orm import Session
 from flask_cors import CORS, cross_origin
 from sqlalchemy import create_engine, inspect
+import logging
 
 from dotenv import load_dotenv
 import jwt
@@ -13,7 +14,8 @@ import random
 
 # Init app
 app = Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, supports_credentials=True)
+logging.getLogger("flask_cors").level = logging.DEBUG
 app.config["CORS_HEADERS"] = "Content-Type"
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -28,16 +30,19 @@ insp = None
 
 # Return list of all tables in the db
 def get_tables_in_db():
+    global engine
     return engine.table_names()
 
 
 # Return column metadata associated with a certain table
 def get_metadata(table):
+    global engine
     return insp.get_columns(table)
 
 
 # Choose the correct driver
 def pick_db_driver(db_type):
+    global engine
     if db_type == "mysql":
         return "mysql+pymysql"
 

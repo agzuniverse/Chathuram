@@ -2,12 +2,12 @@ import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Table from './components/Table';
 import Login from './components/Login';
 import ConfigForm from './components/ConfigForm';
 import useToken from './hooks/useToken';
 import useDBConfig from './hooks/useDBConfig';
 import Header from './components/Header';
+import Dashboard from './components/Dashboard';
 
 const App = () => {
   const { token, setToken } = useToken();
@@ -27,8 +27,9 @@ const App = () => {
       <BrowserRouter>
         <Switch>
           <Route path="/dashboard">
-            <Table />
+            <Dashboard />
           </Route>
+          <Route path="/dashboard/:id" component={Dashboard} />
         </Switch>
       </BrowserRouter>
     </div>
