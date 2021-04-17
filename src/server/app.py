@@ -33,11 +33,12 @@ def get_tables_in_db():
 
 def get_column(self, table_name, schema=None, **kw):
     with self._operation_context() as conn:
-            col_defs = self.dialect.get_columns(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+        col_defs = self.dialect.get_columns(
+            conn, table_name, schema, info_cache=self.info_cache, **kw
+        )
     print(col_defs)
     return col_defs
+
 
 # Return column metadata associated with a certain table
 def get_metadata(table):
