@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, Button, Container, Card } from 'react-bootstrap';
 import { addData } from '../api';
 import '../css/forms.css';
+import { FormContext } from '../FormContext';
 
 const getInputType = (type) => {
     if (type.includes("varchar")) {
@@ -26,91 +27,134 @@ const getInputType = (type) => {
 }
 
 const getMaxLength = (type) => {
-    const regex = /\(([^)]*)\)[^(]*$/;
+    const regex = /\(([^)]*)\)$/;
     const maxLength = type.match(regex);
-    console.log(maxLength);
     return maxLength != null ? maxLength[1] : maxLength;
 }
 
 // Form Input Types
-const InputTextField = ({ type, name, maxLength, placeholder, required, _handleChange }) => {
-    console.log(type, name, placeholder, required)
-    return (<div>
+const InputTextField = ({ id, type, name, maxLength, value, required }) => {
+    const { handleChange } = useContext(FormContext)
+    return (
         <input
+            id={id}
             type={type}
             name={name}
             required={required}
             maxLength={maxLength}
             size={maxLength}
-            autoComplete="off"
-            placeholder={placeholder}
-            onChange={_handleChange}
-        />
-    </div>);
+            value={value ?? ""}
+            onChange={event => handleChange(id, event)}
+        />);
 }
 
-const Checkbox = ({ type, name, checked, required, _handleChange }) => {
-    console.log(type, name, checked, required)
-    return (<div>
+const Checkbox = ({ id, type, name, value }) => {
+    const { handleChange } = useContext(FormContext)
+    return (
         <input
+            id={id}
+            type={type}
+            name={name}
+            checked={value ?? false}
+            onChange={event => handleChange(id, event)}
+        />);
+}
+
+
+const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
+    const { handleChange } = useContext(FormContext)
+    return (
+        <textarea
+            id={id}
             type={type}
             name={name}
             required={required}
-            autoComplete="off"
-            checked={checked}
-            onChange={_handleChange}
-        />
-    </div>);
+            maxLength={maxLength}
+            size={maxLength}
+            value={value ?? ""}
+            onChange={event => handleChange(id, event)}
+        />);
 }
 
-
-const TextAreaField = ({ name, placeholder, required, _handleChange }) => {
-    return (<div>
-        <textarea
-            type="text"
-            name={name}
-            required={required}
-            style={{ height: "80px" }}
-            autoComplete="off"
-            value={placeholder}
-            onChange={_handleChange}
-        />
-    </div>);
-}
-
-const fetchMetadata = () => {
+const fetchMetadata = async () => {
     const test = addData({
         "table": "users"
     });
-    console.log(test);
+    const metadata = await test.then(data => data.metadata)
+    return metadata
 }
 
-const AddToDBTable = ({ metadata }) => {
+const addValuePropertyToMetadata = (props) => {
+    for (let column in props.metadata) {
+        switch (props.metadata[column]["type"]) {
+            case "checkbox":
+                props.metadata[column]["value"] = props.metadata[column]['default'] ?? false
+                break;
+            default:
+                props.metadata[column]['value'] = props.metadata[column]['default'] ?? ""
+        }
+    }
+    return props
+}
+const AddToDBTable = (props) => {
+   
+    const [elements, setElements] = useState(null);
+    useEffect(() => {
+        fetchMetadata().then(data => setElements(data))
+    }, []);
 
-    const handleSave = () => {
-        // TODO
+    const handleSave = (event) => {
+        event.preventDefault();
+        console.log(elements)
+    }
+
+    const handleChange = (elementToChange, event) => {
+        const newElements = [...elements]
+        newElements.forEach(element => {
+            const { type, name } = element
+            if (elementToChange === name) {
+                switch (type) {
+                    case "TINYINT":
+                        element["value"] = event.target.checked;
+                        break;
+                    default:
+                        element["value"] = event.target.value;
+                }
+            }
+            setElements(newElements)
+        });
     };
 
-    // fetch api
-    fetchMetadata();
     return (
-        <div>
+        <FormContext.Provider value={{ handleChange }}>
             <Form>
                 <Container>
-                    {metadata.map((column, index) => {
+                    {elements ? elements.map((column, index) => {
                         const formType = getInputType(column.type.toLowerCase())
                         const maxLength = getMaxLength(column.type);
-                        const placeholder = column.default
+                        const value = column.value ? column.value : null
                         const name = column.name
                         const required = !column.nullable
                         let inputField;
-                        if (formType == "text" || formType == "number" || formType == "datetime-local" || formType == "date" || formType == "time") {
-                            inputField = <InputTextField
+                        if (maxLength != null && maxLength > 20) {
+                            inputField = <TextAreaField
                                 key={name}
+                                id={name}
                                 type={formType}
                                 name={name}
                                 maxLength={maxLength}
-                                placeholder={placeholder}
+                                value={value}
+                                required={required}
+                            />;
+                        }
+                        else if (formType == "text" || formType == "number" || formType == "datetime-local" || formType == "date" || formType == "time") {
+                            inputField = <InputTextField
+                                key={name}
+                                id={name}
+                                type={formType}
+                                name={name}
+                                maxLength={maxLength}
+                                value={value}
                                 required={required}
                             />;
                         }
@@ -118,24 +162,24 @@ const AddToDBTable = ({ metadata }) => {
                         else if (formType == "checkbox") {
                             inputField = <Checkbox
                                 key={name}
+                                id={name}
                                 type={formType}
                                 name={name}
-                                checked={column.default}
-                                required={required}
+                                value={value}
                             />;
                         }
                         return (
-                            <Form.Group key={index} style={{ display: "flex", justifyContent: "space-around" }}>
+                            <Form.Group key={index} style={{ display: "flex", justifyContent: "space-between" }}>
                                 <label key={index + 1} htmlFor={name} style={{ display: "inline-block" }}>{<strong>{name}</strong>}</label>
                                 {inputField}
                             </Form.Group>);
-                    })}
-                    <Button variant="light" type="submit" onClick={handleSave}>
+                    }) : null}
+                    <Button variant="light" type="submit" onClick={event => handleSave(event)}>
                         S A V E
                     </Button>
                 </Container>
             </Form>
-        </div>
+        </FormContext.Provider>
     );
 }
 

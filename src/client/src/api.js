@@ -16,7 +16,7 @@ export async function setConfig(config) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(config),
+        body: JSON.stringify(config)
     }).then(data => data.json())
 }
 
