@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
-import './Dashboard.css';
+import '../css/Dashboard.css'
 import Table from './Table';
 
 
