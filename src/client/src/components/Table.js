@@ -1,6 +1,7 @@
 import React from 'react';
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
+import AddDataToDBTable from './AddDataToDBTable'
 
 const Row = (props) => {
     return props.keys.map((key, index) => <td key={props.content[key]}>{props.content[key]}</td>);
@@ -17,10 +18,10 @@ const Table = (props) => {
         const keys = getKeys();
         return keys.map((key, index) => <th key={key}>{key}</th>)
     };
-    
+
     const getRowsData = () => {
         const keys = getKeys();
-        return props.data.map((row, index) => <tr key={index}><Row key={index} content={row} keys={keys}/></tr>)
+        return props.data.map((row, index) => <tr key={index}><Row key={index} content={row} keys={keys} /></tr>)
     };
 
     return (
@@ -33,6 +34,7 @@ const Table = (props) => {
                     {props.data.length > 0 && getRowsData()}
                 </tbody>
             </ReactBootStrap.Table>
+            <AddDataToDBTable />
         </div>
     );
 }
