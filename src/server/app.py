@@ -3,6 +3,7 @@ from functools import wraps
 
 # from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
+from sqlalchemy.schema import Table, Metadata
 from flask_cors import CORS, cross_origin
 from sqlalchemy import create_engine, inspect
 import logging
@@ -53,7 +54,6 @@ def token_required(f):
 
 # Return list of all tables in the db
 def get_tables_in_db():
-    global insp
     return insp.get_table_names()
 
 
@@ -68,7 +68,6 @@ def get_column(self, table_name, schema=None, **kw):
 
 # Return column metadata associated with a certain table
 def get_metadata(table):
-    global engine
     return insp.get_columns(table)
 
 
@@ -177,6 +176,22 @@ def get_table_metadata():
         col["type"] = str(col["type"])
         col["value"] = "" if col["default"] is None else col["default"]
     return {"metadata": metadata}, 200
+
+
+@app.route("/read", methods=["POST"])
+@cross_origin()
+@token_required
+def read_table_data():
+    data = request.get_json()
+    table = data.get("table")
+    if table not in get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+    current_table = Table(table, Metadata(), autoload_with=engine)
+    data = session.query(current_table).all()
+    result = []
+    for row in data:
+        result.append(row)
+    return {"result": result}, 200
 
 
 @app.route("/create", methods=["POST"])
