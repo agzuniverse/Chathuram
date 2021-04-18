@@ -177,7 +177,7 @@ def get_table_metadata():
     return {"metadata": metadata}, 200
 
 
-@app.route("/meta/create", methods=["POST"])
+@app.route("/create", methods=["POST"])
 @cross_origin()
 @token_required
 def create_table_data():
@@ -187,7 +187,7 @@ def create_table_data():
     return {"message": "Successfully Created"}, 200
 
 
-@app.route("/meta/edit", methods=["POST"])
+@app.route("/update", methods=["POST"])
 @cross_origin()
 @token_required
 def update_table_data():
@@ -199,7 +199,7 @@ def update_table_data():
     return {"message": "Successfully Edited"}, 200
 
 
-@app.route("/meta/delete", methods=["POST"])
+@app.route("/delete", methods=["POST"])
 @cross_origin()
 @token_required
 def delete_table_data():
