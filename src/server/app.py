@@ -53,8 +53,8 @@ def token_required(f):
 
 # Return list of all tables in the db
 def get_tables_in_db():
-    global engine
-    return engine.table_names()
+    global insp
+    return insp.get_table_names()
 
 
 def get_column(self, table_name, schema=None, **kw):
@@ -74,7 +74,6 @@ def get_metadata(table):
 
 # Choose the correct driver
 def pick_db_driver(db_type):
-    global engine
     if db_type == "mysql":
         return "mysql+pymysql"
 
@@ -90,7 +89,6 @@ def establish_connection(username, password, url, port, db_name, db_type):
     )
     session = Session(engine)
     insp = inspect(engine)
-    print(insp.get_table_names())
     return True
 
     # Create classes that map to the tables
@@ -130,7 +128,7 @@ def login():
         )
         return {"token": token}
     else:
-        return {"error": "Failed to generate token"}, 500
+        return {"error": "Incorrect username or password"}, 500
 
 
 @app.route("/config", methods=["POST"])
@@ -167,7 +165,7 @@ def get_table_metadata():
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
     metadata = get_metadata(table)
-    # Column types are non-json serializable objects
+    # Making the column objects json serializable
     for col in metadata:
         col["type"] = str(col["type"])
         col["value"] = "" if col["default"] is None else col["default"]

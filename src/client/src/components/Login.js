@@ -15,7 +15,8 @@ const Login = ({ setToken }) => {
             username,
             password
         });
-        setToken(token);
+        if (token.error) console.log(token)
+        else setToken(token);
     }
 
     return (
