@@ -14,7 +14,8 @@ export async function setConfig(config) {
     return fetch(`${api}/config`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
         },
         body: JSON.stringify(config)
     }).then(data => data.json())
@@ -24,7 +25,8 @@ export async function addData(tableName) {
     return fetch(`${api}/meta`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
         },
         body: JSON.stringify(tableName)
     }).then(data => data.json())
