@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response
+from flask import Flask, request
 from functools import wraps
 
 # from sqlalchemy.ext.automap import automap_base
@@ -108,16 +108,17 @@ def establish_connection(username, password, url, port, db_name, db_type):
 @app.route("/login", methods=["POST"])
 @cross_origin()
 def login():
+    username = os.getenv("LOGIN_USERNAME")
+    password = os.getenv("LOGIN_PASSWORD")
+
+    if username is None or password is None or app.config["SECRET_KEY"] is None:
+        print("ERROR: Environment variables are improperly configured")
+        return {"error": "Credentials are not configured in the server"}, 500
+
     data = request.get_json()
     username_candidate = data["username"]
     password_candidate = data["password"]
 
-    # Decrypt password here
-
-    username = os.getenv("LOGIN_USERNAME")
-    password = os.getenv("LOGIN_PASSWORD")
-
-    print(username, username_candidate, password, password_candidate)
     if username_candidate == username and password_candidate == password:
         token = jwt.encode(
             {
@@ -129,11 +130,7 @@ def login():
         )
         return {"token": token}
     else:
-        return make_response(
-            "Could not verify",
-            401,
-            {"WWW-authenticate": 'basic realm="Login Required"'},
-        )
+        return {"error": "Failed to generate token"}, 500
 
 
 @app.route("/config", methods=["POST"])
