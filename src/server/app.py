@@ -3,7 +3,7 @@ from functools import wraps
 
 # from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
-from sqlalchemy.schema import Table, Metadata
+from sqlalchemy.schema import Table, MetaData
 from flask_cors import CORS, cross_origin
 from sqlalchemy import create_engine, inspect
 import logging
@@ -186,7 +186,7 @@ def read_table_data():
     table = data.get("table")
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
-    current_table = Table(table, Metadata(), autoload_with=engine)
+    current_table = Table(table, MetaData(), autoload_with=engine)
     data = session.query(current_table).all()
     result = []
     for row in data:
