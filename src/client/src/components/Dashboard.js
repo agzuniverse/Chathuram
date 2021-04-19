@@ -3,7 +3,7 @@ import { getTablesList } from '../api';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
-
+import { Link } from 'react-router-dom';
 
 const Dashboard = ({ id }) => {
 
@@ -22,7 +22,7 @@ const Dashboard = ({ id }) => {
                         activeKey="/home"
                     >
                         <div className="sidebar-sticky"></div>
-                        {tables.map((curr, index) =>
+                        {tables && tables.map((curr, index) =>
                             <Nav.Item key={index}>
                                 <Nav.Link href={`/${curr}`}>{curr}</Nav.Link>
                             </Nav.Item>
