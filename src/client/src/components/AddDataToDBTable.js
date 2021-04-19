@@ -76,7 +76,7 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
         />);
 }
 
-const fetchMetadata = async () => {
+const fetchMetadata = async (table) => {
     const test = addData({
         "table": "users"
     });
@@ -84,18 +84,6 @@ const fetchMetadata = async () => {
     return metadata
 }
 
-const addValuePropertyToMetadata = (props) => {
-    for (let column in props.metadata) {
-        switch (props.metadata[column]["type"]) {
-            case "checkbox":
-                props.metadata[column]["value"] = props.metadata[column]['default'] ?? false
-                break;
-            default:
-                props.metadata[column]['value'] = props.metadata[column]['default'] ?? ""
-        }
-    }
-    return props
-}
 const AddToDBTable = (props) => {
    
     const [elements, setElements] = useState(null);
