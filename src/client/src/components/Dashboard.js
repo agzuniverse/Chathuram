@@ -3,7 +3,6 @@ import { getTablesList } from '../api';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
-import { Link } from 'react-router-dom';
 
 const Dashboard = ({ id }) => {
 
