@@ -47,6 +47,6 @@ export async function readData(tableName) {
             'Content-Type': 'application/json',
             "x-access-token": JSON.parse(localStorage.getItem('token')).token
         },
-        body: JSON.stringify(tableName)
+        body: JSON.stringify({ "table": tableName })
     }).then(data => data.json())
 }

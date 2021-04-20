@@ -4,15 +4,16 @@ import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
 
-const Dashboard = ({ id }) => {
+const Dashboard = () => {
 
     const [tables, setTables] = useState()
     const [table, setTable] = useState()
     useEffect(() => {
         getTablesList().then(data => {
             setTables(data.tables)
-            readData(data.tables[0]).then(d => {
-                setTable(d.result)
+            readData(data.tables[0]).then(data => {
+                setTable(data.rows)
+                console.log(data);
             })
         })
     }, [])
@@ -27,7 +28,7 @@ const Dashboard = ({ id }) => {
                         <div className="sidebar-sticky"></div>
                         {tables && tables.map((curr, index) =>
                             <Nav.Item key={index}>
-                                <Nav.Link href={`/${curr}`} onClick={setTable(curr)}>{curr}</Nav.Link>
+                                <Nav.Link href={`/${curr}`} onClick={() => setTable(curr)}>{curr}</Nav.Link>
                             </Nav.Item>
                         )}
                     </Nav>

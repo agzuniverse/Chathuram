@@ -29,7 +29,6 @@ const App = () => {
           <Route path="/dashboard">
             <Dashboard />
           </Route>
-          <Route path="/dashboard/:id" component={Dashboard} />
         </Switch>
       </BrowserRouter>
     </div>
