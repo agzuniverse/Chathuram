@@ -1,9 +1,21 @@
+import React, { useState, useEffect } from 'react';
+import { getTablesList, readData } from '../api';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
 
 const Dashboard = ({ id }) => {
-    const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
+
+    const [tables, setTables] = useState()
+    const [table, setTable] = useState()
+    useEffect(() => {
+        getTablesList().then(data => {
+            setTables(data.tables)
+            readData(data.tables[0]).then(d => {
+                setTable(d.result)
+            })
+        })
+    }, [])
 
     return (
         <Container fluid>
@@ -15,13 +27,13 @@ const Dashboard = ({ id }) => {
                         <div className="sidebar-sticky"></div>
                         {tables && tables.map((curr, index) =>
                             <Nav.Item key={index}>
-                                <Nav.Link href={`/${curr}`}>{curr}</Nav.Link>
+                                <Nav.Link href={`/${curr}`} onClick={setTable(curr)}>{curr}</Nav.Link>
                             </Nav.Item>
                         )}
                     </Nav>
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
-                    <Table id={id} />
+                    <Table data={table} />
                 </Col>
             </Row>
         </Container>
