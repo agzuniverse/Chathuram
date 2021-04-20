@@ -39,3 +39,14 @@ export async function getTablesList() {
         },
     }).then(data => data.json())
 }
+
+export async function readData(tableName) {
+    return fetch(`${api}/read`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        },
+        body: JSON.stringify(tableName)
+    }).then(data => data.json())
+}
