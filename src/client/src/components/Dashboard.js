@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getTablesList } from '../api';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
@@ -8,9 +7,8 @@ const Dashboard = ({ id }) => {
 
     const [tables, setTables] = useState()
     useEffect(() => {
-        getTablesList().then(data => {
-            setTables(data.tables)
-        })
+        const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
+        setTables(tables)
     }, [])
 
     return (
