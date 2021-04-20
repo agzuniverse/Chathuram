@@ -31,11 +31,3 @@ export async function addData(tableName) {
         body: JSON.stringify(tableName)
     }).then(data => data.json())
 }
-
-export async function getTablesList() {
-    return fetch(`${api}/tables`, {
-        headers: {
-            "x-access-token": JSON.parse(localStorage.getItem('token')).token
-        },
-    }).then(data => data.json())
-}
