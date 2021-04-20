@@ -1,15 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
 
 const Dashboard = ({ id }) => {
-
-    const [tables, setTables] = useState()
-    useEffect(() => {
-        const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
-        setTables(tables)
-    }, [])
+    const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
 
     return (
         <Container fluid>
