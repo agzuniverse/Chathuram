@@ -155,6 +155,13 @@ def db_config():
     return {"tables": tables}, 200
 
 
+@app.route("/tables", methods=["GET"])
+@cross_origin()
+@token_required
+def get_tables():
+    return {"tables": get_tables_in_db()}, 200
+
+
 @app.route("/meta", methods=["POST"])
 @cross_origin()
 @token_required
