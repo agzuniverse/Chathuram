@@ -68,12 +68,7 @@ def get_column(self, table_name, schema=None, **kw):
 
 # Return column metadata associated with a certain table
 def get_metadata(table):
-    metadata = get_column(insp, table)
-    # Making the column objects json serializable
-    for col in metadata:
-        col["type"] = str(col["type"])
-        col["value"] = "" if col["default"] is None else col["default"]
-    return metadata
+    return get_column(insp, table)
 
 
 # Choose the correct driver
@@ -176,6 +171,10 @@ def get_table_metadata():
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
     metadata = get_metadata(table)
+    # Making the column objects json serializable
+    for col in metadata:
+        col["type"] = str(col["type"])
+        col["value"] = "" if col["default"] is None else col["default"]
     return {"metadata": metadata}, 200
 
 
@@ -184,19 +183,16 @@ def get_table_metadata():
 @token_required
 def read_table_data():
     data = request.get_json()
-    print(data)
     table = data.get("table")
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
     # Get all rows from table
     current_table = Table(table, MetaData(), autoload_with=engine)
     data = session.query(current_table).all()
-    rows = []
+    result = []
     for row in data:
-        rows.append(list(row))
-    # Get table metadata, such as column names and data types
-    metadata = get_metadata(table)
-    return {"metdata": metadata, "rows": rows}, 200
+        result.append(row)
+    return {"result": result}, 200
 
 
 @app.route("/create", methods=["POST"])
