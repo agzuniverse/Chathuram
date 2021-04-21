@@ -68,7 +68,7 @@ def get_column(self, table_name, schema=None, **kw):
 
 # Return column metadata associated with a certain table
 def get_metadata(table):
-    return insp.get_columns(table)
+    return get_column(insp, table)
 
 
 # Choose the correct driver

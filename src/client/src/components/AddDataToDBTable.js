@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Form, Button, Container, Card } from 'react-bootstrap';
+import { Form, Button, Container } from 'react-bootstrap';
 import { addData } from '../api';
 import '../css/forms.css';
 import { FormContext } from '../FormContext';
@@ -76,9 +76,9 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
         />);
 }
 
-const fetchMetadata = async (table) => {
+const fetchMetadata = async (props) => {
     const test = addData({
-        "table": "users"
+        "table": props.table
     });
     const metadata = await test.then(data => data.metadata)
     return metadata
@@ -88,7 +88,7 @@ const AddToDBTable = (props) => {
    
     const [elements, setElements] = useState(null);
     useEffect(() => {
-        fetchMetadata().then(data => setElements(data))
+        fetchMetadata(props).then(data => setElements(data))
     }, []);
 
     const handleSave = (event) => {

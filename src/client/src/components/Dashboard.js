@@ -1,21 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { getTablesList, readData } from '../api';
+import { readData } from '../api';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
+import AddToDBTable from './AddDataToDBTable';
 
-const Dashboard = ({ id }) => {
 
-    const [tables, setTables] = useState()
-    const [table, setTable] = useState()
+const fetchRows = async (curr) => {
+    const test = readData({
+        "table": curr
+    });
+    const data_read = await test.then(data => data.result)
+    return data_read
+}
+
+const Dashboard = ( props ) => {
+    const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
+
+    const [tableName, setTableName] = useState(tables[0])
+    const [row, setRow] = useState()
     useEffect(() => {
-        getTablesList().then(data => {
-            setTables(data.tables)
-            readData(data.tables[0]).then(d => {
-                setTable(d.result)
-            })
-        })
-    }, [])
+        const { match: { params } } = props;
+        if (params.tableName) {
+            const tn = params.tableName;
+            setTableName(tn)
+            fetchRows(tn).then(data => setRow(data))
+        }
+        else {
+            fetchRows(tableName).then(data => setRow(data))
+        }
+    }, []);
 
     return (
         <Container fluid>
@@ -27,13 +41,14 @@ const Dashboard = ({ id }) => {
                         <div className="sidebar-sticky"></div>
                         {tables && tables.map((curr, index) =>
                             <Nav.Item key={index}>
-                                <Nav.Link href={`/${curr}`} onClick={setTable(curr)}>{curr}</Nav.Link>
+                                <Nav.Link href={`/dashboard/${curr}`}>{curr}</Nav.Link>
                             </Nav.Item>
                         )}
                     </Nav>
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
-                    <Table data={table} />
+                    <AddToDBTable table={tableName}/>
+                    <Table data={row} />
                 </Col>
             </Row>
         </Container>

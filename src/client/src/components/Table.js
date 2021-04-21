@@ -34,7 +34,7 @@ const Table = (props) => {
                     {props.data.length > 0 && getRowsData()}
                 </tbody>
             </ReactBootStrap.Table>
-            <AddDataToDBTable />
+            {/* <AddDataToDBTable /> */}
         </div>
     );
 }
