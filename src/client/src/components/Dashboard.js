@@ -6,16 +6,7 @@ import Table from './Table';
 import AddToDBTable from './AddDataToDBTable';
 
 
-const fetchRows = async (curr) => {
-    const test = readData({
-        "table": curr
-    });
-    const data_read = await test.then(data => data.result)
-    return data_read
-}
-
-
-const Dashboard = ( props ) => {
+const Dashboard = (props) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
 
     const [tableName, setTableName] = useState(tables[0])
@@ -24,11 +15,12 @@ const Dashboard = ( props ) => {
         const { match: { params } } = props;
         if (params.tableName) {
             const tn = params.tableName;
+            console.log(tn);
             setTableName(tn)
-            fetchRows(tn).then(data => setRow(data))
+            readData(tableName).then(data => setRow(data.result))
         }
         else {
-            fetchRows(tableName).then(data => setRow(data))
+            readData(tableName).then(data => setRow(data.result))
         }
     }, []);
 
@@ -48,7 +40,7 @@ const Dashboard = ( props ) => {
                     </Nav>
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
-                    <AddToDBTable table={tableName}/>
+                    <AddToDBTable table={tableName} />
                     <Table data={row} />
                 </Col>
             </Row>
