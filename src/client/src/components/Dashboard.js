@@ -10,17 +10,17 @@ const Dashboard = (props) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
 
     const [tableName, setTableName] = useState(tables[0])
-    const [rows, setRows] = useState()
+    const [tableData, setTableData] = useState()
     useEffect(() => {
         const { match: { params } } = props;
         if (params.tableName) {
             const tn = params.tableName;
             console.log(tn);
             setTableName(tn)
-            readData(tableName).then(data => setRows(data.result))
+            readData(tableName).then(data => setTableData(data))
         }
         else {
-            readData(tableName).then(data => setRows(data.result))
+            readData(tableName).then(data => setTableData(data))
         }
     }, []);
 
@@ -41,7 +41,7 @@ const Dashboard = (props) => {
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
                     <AddToDBTable table={tableName} />
-                    <Table data={rows} />
+                    <Table data={tableData} />
                 </Col>
             </Row>
         </Container>
