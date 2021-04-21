@@ -11,18 +11,20 @@ const Dashboard = (props) => {
 
     const [tableName, setTableName] = useState(tables[0])
     const [tableData, setTableData] = useState()
+
+    // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
         const { match: { params } } = props;
         if (params.tableName) {
             const tn = params.tableName;
-            console.log(tn);
             setTableName(tn)
-            readData(tableName).then(data => setTableData(data))
-        }
-        else {
-            readData(tableName).then(data => setTableData(data))
         }
     }, []);
+
+    // When tableName changes, make a request to fetch details of that table
+    useEffect(() => {
+        readData(tableName).then(data => setTableData(data))
+    }, [tableName])
 
     return (
         <Container fluid>

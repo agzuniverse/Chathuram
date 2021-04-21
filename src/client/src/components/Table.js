@@ -10,7 +10,6 @@ const Row = (props) => {
 const Table = (props) => {
 
     const getKeys = () => {
-        console.log(props.data);
         const keys = props.data.metadata?.map((meta, index) => meta.name);
         return keys;
     };
