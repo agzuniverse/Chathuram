@@ -186,6 +186,7 @@ def read_table_data():
     table = data.get("table")
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
+    # Get all rows from table
     current_table = Table(table, MetaData(), autoload_with=engine)
     data = session.query(current_table).all()
     result = []

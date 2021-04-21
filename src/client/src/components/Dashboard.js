@@ -14,6 +14,7 @@ const fetchRows = async (curr) => {
     return data_read
 }
 
+
 const Dashboard = ( props ) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
 
