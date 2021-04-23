@@ -27,6 +27,7 @@ const App = () => {
       <BrowserRouter>
         <Switch>
           <Route path="/dashboard/:tableName" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
         </Switch>
       </BrowserRouter>
     </div>
