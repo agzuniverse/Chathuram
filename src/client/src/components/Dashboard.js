@@ -6,31 +6,25 @@ import Table from './Table';
 import AddToDBTable from './AddDataToDBTable';
 
 
-const fetchRows = async (curr) => {
-    const test = readData({
-        "table": curr
-    });
-    const data_read = await test.then(data => data.result)
-    return data_read
-}
-
-
-const Dashboard = ( props ) => {
+const Dashboard = (props) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
 
     const [tableName, setTableName] = useState(tables[0])
-    const [row, setRow] = useState()
+    const [tableData, setTableData] = useState()
+
+    // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
         const { match: { params } } = props;
         if (params.tableName) {
             const tn = params.tableName;
             setTableName(tn)
-            fetchRows(tn).then(data => setRow(data))
-        }
-        else {
-            fetchRows(tableName).then(data => setRow(data))
         }
     }, []);
+
+    // When tableName changes, make a request to fetch details of that table
+    useEffect(() => {
+        readData(tableName).then(data => setTableData(data))
+    }, [tableName])
 
     return (
         <Container fluid>
@@ -48,8 +42,8 @@ const Dashboard = ( props ) => {
                     </Nav>
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
-                    <AddToDBTable table={tableName}/>
-                    <Table data={row} />
+                    <AddToDBTable table={tableName} />
+                    <Table data={tableData} />
                 </Col>
             </Row>
         </Container>

@@ -57,18 +57,22 @@ def get_tables_in_db():
     return insp.get_table_names()
 
 
-def get_column(self, table_name, schema=None, **kw):
+def get_columns(self, table_name, schema=None, **kw):
     with self._operation_context() as conn:
         col_defs = self.dialect.get_columns(
             conn, table_name, schema, info_cache=self.info_cache, **kw
         )
-    print(col_defs)
     return col_defs
 
 
-# Return column metadata associated with a certain table
+# Return column metadata associated with a table
 def get_metadata(table):
-    return get_column(insp, table)
+    metadata = get_columns(insp, table)
+    # Making the column objects json serializable
+    for col in metadata:
+        col["type"] = str(col["type"])
+        col["value"] = "" if col["default"] is None else col["default"]
+    return metadata
 
 
 # Choose the correct driver
@@ -170,12 +174,7 @@ def get_table_metadata():
     table = data.get("table")
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
-    metadata = get_metadata(table)
-    # Making the column objects json serializable
-    for col in metadata:
-        col["type"] = str(col["type"])
-        col["value"] = "" if col["default"] is None else col["default"]
-    return {"metadata": metadata}, 200
+    return {"metadata": get_metadata(table)}, 200
 
 
 @app.route("/read", methods=["POST"])
@@ -189,10 +188,11 @@ def read_table_data():
     # Get all rows from table
     current_table = Table(table, MetaData(), autoload_with=engine)
     data = session.query(current_table).all()
+    metadata = get_metadata(table)
     result = []
     for row in data:
-        result.append(row)
-    return {"result": result}, 200
+        result.append(list(row))
+    return {"metadata": metadata, "rows": result}, 200
 
 
 @app.route("/create", methods=["POST"])
