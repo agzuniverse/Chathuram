@@ -215,6 +215,7 @@ def create_table_data():
                 DB_NAME, table, columns, values
             )
         )
+        session.commit()
         return {"message": "Successfully Created"}, 200
     except exc.IntegrityError:
         return {"message": "Integrity Error"}, 400
