@@ -27,7 +27,6 @@ load_dotenv()
 engine = None
 session = None
 insp = None
-DB_NAME = None
 
 
 # Decorator to check for token
@@ -84,8 +83,7 @@ def pick_db_driver(db_type):
 
 # Establish connection:
 def establish_connection(username, password, url, port, db_name, db_type):
-    global engine, session, insp, DB_NAME
-    DB_NAME = db_name
+    global engine, session, insp
     db_driver = pick_db_driver(db_type)
     engine = create_engine(
         "{0}://{1}:{2}@{3}:{4}/{5}".format(
