@@ -26,6 +26,8 @@ const ConfigForm = ({ setDBConfig }) => {
             db_type
         });
         setDBConfig(res);
+        // Redirect to dashboard on successfully establishing DB connection
+        window.location.replace(`${window.location.href}dashboard`)
     }
 
     return (
