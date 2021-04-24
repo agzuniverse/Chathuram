@@ -5,7 +5,7 @@ from functools import wraps
 from sqlalchemy.orm import Session
 from sqlalchemy.schema import Table, MetaData
 from flask_cors import CORS, cross_origin
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, exc
 import logging
 
 from dotenv import load_dotenv
@@ -27,6 +27,7 @@ load_dotenv()
 engine = None
 session = None
 insp = None
+DB_NAME = None
 
 
 # Decorator to check for token
@@ -83,7 +84,8 @@ def pick_db_driver(db_type):
 
 # Establish connection:
 def establish_connection(username, password, url, port, db_name, db_type):
-    global engine, session, insp
+    global engine, session, insp, DB_NAME
+    DB_NAME = db_name
     db_driver = pick_db_driver(db_type)
     engine = create_engine(
         "{0}://{1}:{2}@{3}:{4}/{5}".format(
@@ -199,10 +201,24 @@ def read_table_data():
 @cross_origin()
 @token_required
 def create_table_data():
-    data = request.get_json()
-    print(data)
     # Create table data here
-    return {"message": "Successfully Created"}, 200
+    data = request.get_json()
+    table = data.get("table")
+    if table not in get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+
+    columns = ", ".join("`{0}`".format(column) for column in data.get("columns"))
+    values = ", ".join('"{0}"'.format(value) for value in data.get("values"))
+    try:
+        engine.execute(
+            "INSERT INTO `{0}`.`{1}` ({2}) VALUES ({3})".format(
+                DB_NAME, table, columns, values
+            )
+        )
+        session.commit()
+        return {"message": "Successfully Created"}, 200
+    except exc.IntegrityError:
+        return {"message": "Integrity Error"}, 400
 
 
 @app.route("/update", methods=["POST"])
