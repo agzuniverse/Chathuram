@@ -29,6 +29,7 @@ session = None
 insp = None
 DB_NAME = None
 
+
 # Decorator to check for token
 def token_required(f):
     @wraps(f)
