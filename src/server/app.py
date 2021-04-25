@@ -200,9 +200,17 @@ def read_table_data():
 @token_required
 def create_table_data():
     data = request.get_json()
-    print(data)
-    # Create table data here
-    return {"message": "Successfully Created"}, 200
+    table = data.get("table")
+    if table not in get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+    row = data.get("row")
+    current_table = Table(table, MetaData(), autoload_with=engine)
+    try:
+        engine.execute(current_table.insert(), row)
+        session.commit()
+        return {"message": "Successfully Created"}, 200
+    except exc.IntegrityError:
+        return {"message": "Integrity Error"}, 400
 
 
 @app.route("/update", methods=["POST"])
