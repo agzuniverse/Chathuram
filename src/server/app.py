@@ -5,7 +5,7 @@ from functools import wraps
 from sqlalchemy.orm import Session
 from sqlalchemy.schema import Table, MetaData
 from flask_cors import CORS, cross_origin
-from sqlalchemy import create_engine, inspect
+from sqlalchemy import create_engine, inspect, text
 import logging
 
 from dotenv import load_dotenv
@@ -223,9 +223,19 @@ def update_table_data():
 def delete_table_data():
     data = request.get_json()
     table = data.get("table")
+    fields = data.get("fields")
+    print("etset ", fields)
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
-    # Delete metadata here
+
+    where_clause = ""
+    for k in fields.keys():
+        where_clause = f'{k} = "{fields[k]}"'
+
+    try:
+        res = session.execute(text(f"delete from {table} where {where_clause}"))
+    except Exception as e:
+        return {"message": e}, 400
     return {"message": "Successfully Deleted"}, 200
 
 
