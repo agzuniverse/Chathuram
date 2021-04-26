@@ -80,16 +80,18 @@ const fetchMetadata = async (props) => {
     const test = addData({
         "table": props.table
     });
+    console.log("tableName", props.table)
     const metadata = await test.then(data => data.metadata)
+    console.log("Metadata", metadata)
     return metadata
 }
 
 const AddToDBTable = (props) => {
-   
+    console.log("props(db)", props)
     const [elements, setElements] = useState(null);
     useEffect(() => {
-        fetchMetadata(props).then(data => setElements(data))
-    }, []);
+        fetchMetadata(props).then(data => {console.log("Fetch", data);setElements(data)})
+    }, [props.table]);
 
     const handleSave = (event) => {
         event.preventDefault();
@@ -118,6 +120,7 @@ const AddToDBTable = (props) => {
             <Form>
                 <Container>
                     {elements ? elements.map((column, index) => {
+                        console.log("Elements", elements)
                         const formType = getInputType(column.type.toLowerCase())
                         const maxLength = getMaxLength(column.type);
                         const value = column.value ? column.value : null

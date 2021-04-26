@@ -8,7 +8,7 @@ const Row = (props) => {
 }
 
 const Table = (props) => {
-
+    console.log("props", props)
     const getKeys = () => {
         const keys = props.data.metadata?.map((meta, index) => meta.name);
         return keys;

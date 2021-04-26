@@ -8,7 +8,7 @@ import AddToDBTable from './AddDataToDBTable';
 
 const Dashboard = (props) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
-
+    console.log(tables)
     const [tableName, setTableName] = useState(tables[0])
     const [tableData, setTableData] = useState()
 
@@ -17,6 +17,7 @@ const Dashboard = (props) => {
         const { match: { params } } = props;
         if (params.tableName) {
             const tn = params.tableName;
+            console.log(tn)
             setTableName(tn)
         }
     }, []);
