@@ -76,21 +76,12 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
         />);
 }
 
-const fetchMetadata = async (props) => {
-    const test = addData({
-        "table": props.table
-    });
-    console.log("tableName", props.table)
-    const metadata = await test.then(data => data.metadata)
-    console.log("Metadata", metadata)
-    return metadata
-}
 
 const AddToDBTable = (props) => {
-    console.log("props(db)", props)
+    // console.log("props(db)", props)
     const [elements, setElements] = useState(null);
     useEffect(() => {
-        fetchMetadata(props).then(data => {console.log("Fetch", data);setElements(data)})
+        addData({ "table": props.table }).then(data => setElements(data.metadata))
     }, [props.table]);
 
     const handleSave = (event) => {
