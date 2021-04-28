@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { readData } from '../api';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
@@ -8,23 +8,24 @@ import AddToDBTable from './AddDataToDBTable';
 
 const Dashboard = (props) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
-    console.log(tables)
-    const [tableName, setTableName] = useState(tables[0])
+    const [tableName, setTableName] = useState(null)
     const [tableData, setTableData] = useState()
 
     // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
         const { match: { params } } = props;
         if (params.tableName) {
-            const tn = params.tableName;
-            console.log(tn)
-            setTableName(tn)
+            setTableName(params.tableName)
+        } else if (tables) {
+            // When URL does not specify a table, display the first table
+            setTableName(tables[0])
         }
     }, []);
 
     // When tableName changes, make a request to fetch details of that table
     useEffect(() => {
-        readData(tableName).then(data => setTableData(data))
+        if (tableName)
+            readData(tableName).then(data => setTableData(data))
     }, [tableName])
 
     return (
@@ -32,8 +33,7 @@ const Dashboard = (props) => {
             <Row>
                 <Col xs={2} id="sidebar-wrapper">
                     <Nav className="col-md-12 d-none d-md-block bg-dark sidebar"
-                        activeKey="/home"
-                    >
+                        activeKey="/home">
                         <div className="sidebar-sticky"></div>
                         {tables && tables.map((curr, index) =>
                             <Nav.Item key={index}>
@@ -50,8 +50,5 @@ const Dashboard = (props) => {
         </Container>
     );
 }
-
-
-
 
 export default Dashboard;

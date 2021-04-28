@@ -1,12 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './components/Login';
 import ConfigForm from './components/ConfigForm';
 import useToken from './hooks/useToken';
 import useDBConfig from './hooks/useDBConfig';
-import Header from './components/Header';
+import { Header } from './components/Header';
 import Dashboard from './components/Dashboard';
 
 const App = () => {

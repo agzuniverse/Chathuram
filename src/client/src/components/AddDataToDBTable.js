@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
 import { addData } from '../api';
 import '../css/forms.css';
@@ -76,21 +76,18 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
         />);
 }
 
-const fetchMetadata = async (props) => {
-    const test = addData({
-        "table": props.table
-    });
-    console.log("tableName", props.table)
-    const metadata = await test.then(data => data.metadata)
-    console.log("Metadata", metadata)
-    return metadata
-}
 
 const AddToDBTable = (props) => {
-    console.log("props(db)", props)
+    // console.log("props(db)", props)
     const [elements, setElements] = useState(null);
+
     useEffect(() => {
-        fetchMetadata(props).then(data => {console.log("Fetch", data);setElements(data)})
+        console.log("ADDDATA (RE)RENDERS");
+    })
+
+    useEffect(() => {
+      if (props.table)
+            addData({ "table": props.table }).then(data => setElements(data.metadata))
     }, [props.table]);
 
     const handleSave = (event) => {
@@ -115,63 +112,65 @@ const AddToDBTable = (props) => {
         });
     };
 
-    return (
-        <FormContext.Provider value={{ handleChange }}>
-            <Form>
-                <Container>
-                    {elements ? elements.map((column, index) => {
-                        console.log("Elements", elements)
-                        const formType = getInputType(column.type.toLowerCase())
-                        const maxLength = getMaxLength(column.type);
-                        const value = column.value ? column.value : null
-                        const name = column.name
-                        const required = !column.nullable
-                        let inputField;
-                        if (maxLength != null && maxLength > 20) {
-                            inputField = <TextAreaField
-                                key={name}
-                                id={name}
-                                type={formType}
-                                name={name}
-                                maxLength={maxLength}
-                                value={value}
-                                required={required}
-                            />;
-                        }
-                        else if (formType == "text" || formType == "number" || formType == "datetime-local" || formType == "date" || formType == "time") {
-                            inputField = <InputTextField
-                                key={name}
-                                id={name}
-                                type={formType}
-                                name={name}
-                                maxLength={maxLength}
-                                value={value}
-                                required={required}
-                            />;
-                        }
+    return useMemo(() => {
+        return (
+            <FormContext.Provider value={{ handleChange }}>
+                <Form>
+                    <Container>
+                        {elements ? elements.map((column, index) => {
+                            console.log("Elements", elements)
+                            const formType = getInputType(column.type.toLowerCase())
+                            const maxLength = getMaxLength(column.type);
+                            const value = column.value ? column.value : null
+                            const name = column.name
+                            const required = !column.nullable
+                            let inputField;
+                            if (maxLength != null && maxLength > 20) {
+                                inputField = <TextAreaField
+                                    key={name}
+                                    id={name}
+                                    type={formType}
+                                    name={name}
+                                    maxLength={maxLength}
+                                    value={value}
+                                    required={required}
+                                />;
+                            }
+                            else if (formType == "text" || formType == "number" || formType == "datetime-local" || formType == "date" || formType == "time") {
+                                inputField = <InputTextField
+                                    key={name}
+                                    id={name}
+                                    type={formType}
+                                    name={name}
+                                    maxLength={maxLength}
+                                    value={value}
+                                    required={required}
+                                />;
+                            }
 
-                        else if (formType == "checkbox") {
-                            inputField = <Checkbox
-                                key={name}
-                                id={name}
-                                type={formType}
-                                name={name}
-                                value={value}
-                            />;
-                        }
-                        return (
-                            <Form.Group key={index} style={{ display: "flex", justifyContent: "space-between" }}>
-                                <label key={index + 1} htmlFor={name} style={{ display: "inline-block" }}>{<strong>{name}</strong>}</label>
-                                {inputField}
-                            </Form.Group>);
-                    }) : null}
-                    <Button variant="light" type="submit" onClick={event => handleSave(event)}>
-                        S A V E
-                    </Button>
-                </Container>
-            </Form>
-        </FormContext.Provider>
-    );
+                            else if (formType == "checkbox") {
+                                inputField = <Checkbox
+                                    key={name}
+                                    id={name}
+                                    type={formType}
+                                    name={name}
+                                    value={value}
+                                />;
+                            }
+                            return (
+                                <Form.Group key={index} style={{ display: "flex", justifyContent: "space-between" }}>
+                                    <label key={index + 1} htmlFor={name} style={{ display: "inline-block" }}>{<strong>{name}</strong>}</label>
+                                    {inputField}
+                                </Form.Group>);
+                        }) : null}
+                        <Button variant="light" type="submit" onClick={event => handleSave(event)}>
+                            S A V E
+                        </Button>
+                    </Container>
+                </Form>
+            </FormContext.Provider>
+        );
+    }, [elements])
 }
 
 

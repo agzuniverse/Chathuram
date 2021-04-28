@@ -1,4 +1,22 @@
-const api = "http://127.0.0.1:5000";
+import { logout } from "./components/Header";
+
+const api = "http://127.0.0.1:5000"
+
+const token = JSON.parse(localStorage.getItem("token"))?.token
+let expiryTime;
+if (token) {
+    const base64decoded = atob(token.split(".")[1])
+    expiryTime = JSON.parse(base64decoded).exp
+}
+
+
+const isTokenExpired = () => {
+    const currentTime = Date.now().valueOf() / 1000
+    if (currentTime > expiryTime) {
+        console.log("ERROR: Token expired")
+        logout()
+    }
+}
 
 export async function loginUser(credentials) {
     return fetch(`${api}/login`, {
@@ -11,6 +29,7 @@ export async function loginUser(credentials) {
 }
 
 export async function setConfig(config) {
+    isTokenExpired()
     return fetch(`${api}/config`, {
         method: 'POST',
         headers: {
@@ -22,6 +41,7 @@ export async function setConfig(config) {
 }
 
 export async function addData(tableName) {
+    isTokenExpired()
     return fetch(`${api}/meta`, {
         method: 'POST',
         headers: {
@@ -33,6 +53,7 @@ export async function addData(tableName) {
 }
 
 export async function getTablesList() {
+    isTokenExpired()
     return fetch(`${api}/tables`, {
         headers: {
             "x-access-token": JSON.parse(localStorage.getItem('token')).token
@@ -41,6 +62,7 @@ export async function getTablesList() {
 }
 
 export async function readData(tableName) {
+    isTokenExpired()
     return fetch(`${api}/read`, {
         method: 'POST',
         headers: {
