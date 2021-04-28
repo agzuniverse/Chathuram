@@ -221,8 +221,15 @@ def update_table_data():
     table = data.get("table")
     if table not in get_tables_in_db():
         return {"error": "Table does not exist"}, 400
-    # Update table data here
-    return {"message": "Successfully Edited"}, 200
+    row = data.get("row")
+    old_row = data.get("old_row")
+    current_table = Table(table, MetaData(), autoload_with=engine)
+    try:
+        session.query(current_table).filter_by(**old_row).update(row)
+        session.commit()
+        return {"message": "Successfully Updated"}, 200
+    except exc.IntegrityError:
+        return {"error": "Integrity Error"}, 400
 
 
 @app.route("/delete", methods=["POST"])
