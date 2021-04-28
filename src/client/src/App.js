@@ -6,7 +6,7 @@ import Login from './components/Login';
 import ConfigForm from './components/ConfigForm';
 import useToken from './hooks/useToken';
 import useDBConfig from './hooks/useDBConfig';
-import Header from './components/Header';
+import { Header } from './components/Header';
 import Dashboard from './components/Dashboard';
 
 const App = () => {

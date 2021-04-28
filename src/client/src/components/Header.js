@@ -1,12 +1,15 @@
 import React from 'react';
 import {Navbar, Nav} from 'react-bootstrap';
 
-const Header = () => {
-    const logout = e => {
+function logout(e) {
+    console.log("inside logout function")
+    if(e)
         e.preventDefault()
-        localStorage.clear()
-        window.location.href = '/'
-    }
+    localStorage.clear()
+    window.location.href = '/'
+}
+
+const Header = () => {
 
     return (
         <div>
@@ -24,4 +27,7 @@ const Header = () => {
     );
 }
 
-export default Header;
+export {
+    logout,
+    Header,
+}
