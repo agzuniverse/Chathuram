@@ -89,8 +89,14 @@ const fetchMetadata = async (props) => {
 const AddToDBTable = (props) => {
     console.log("props(db)", props)
     const [elements, setElements] = useState(null);
+
     useEffect(() => {
-        fetchMetadata(props).then(data => {console.log("Fetch", data);setElements(data)})
+        console.log("ADDDATA (RE)RENDERS");
+    })
+
+    useEffect(() => {
+        if (props.table)
+            fetchMetadata(props).then(data => { console.log("Fetch", data); setElements(data) })
     }, [props.table]);
 
     const handleSave = (event) => {
