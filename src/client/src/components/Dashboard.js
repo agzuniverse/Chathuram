@@ -32,8 +32,7 @@ const Dashboard = (props) => {
             <Row>
                 <Col xs={2} id="sidebar-wrapper">
                     <Nav className="col-md-12 d-none d-md-block bg-dark sidebar"
-                        activeKey="/home"
-                    >
+                        activeKey="/home">
                         <div className="sidebar-sticky"></div>
                         {tables && tables.map((curr, index) =>
                             <Nav.Item key={index}>
@@ -50,8 +49,5 @@ const Dashboard = (props) => {
         </Container>
     );
 }
-
-
-
 
 export default Dashboard;
