@@ -37,16 +37,16 @@ def token_required(f):
         if "x-access-token" in request.headers:
             token = request.headers["x-access-token"]
         if not token:
-            return {"message": "Token is missing!"}, 401
+            return {"error": "Token is missing!"}, 401
         try:
             data = jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
             username = data["username"]
             if username != os.getenv("LOGIN_USERNAME"):
-                return {"message": "Token is invalid!"}, 401
+                return {"error": "Token is invalid!"}, 401
         except jwt.exceptions.InvalidSignatureError:
-            return {"message": "Token is invalid!"}, 401
+            return {"error": "Token is invalid!"}, 401
         except KeyError:
-            return {"message": "Token is invalid!"}, 401
+            return {"error": "Token is invalid!"}, 401
         return f(*args, **kwargs)
 
     return decorated
@@ -210,7 +210,7 @@ def create_table_data():
         session.commit()
         return {"message": "Successfully Created"}, 200
     except exc.IntegrityError:
-        return {"message": "Integrity Error"}, 400
+        return {"error": "Integrity Error"}, 400
 
 
 @app.route("/update", methods=["POST"])
