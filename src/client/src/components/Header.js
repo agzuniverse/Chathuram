@@ -6,7 +6,7 @@ function logout(e) {
     if(e)
         e.preventDefault()
     localStorage.clear()
-    window.location.href = '/'
+    window.location.replace('/')
 }
 
 const Header = () => {
