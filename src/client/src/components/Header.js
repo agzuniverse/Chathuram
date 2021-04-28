@@ -1,11 +1,11 @@
 import React from 'react';
-import {Navbar, Nav} from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 
 const Header = () => {
     const logout = e => {
         e.preventDefault()
         localStorage.clear()
-        window.location.href = '/'
+        window.location.replace('/')
     }
 
     return (
