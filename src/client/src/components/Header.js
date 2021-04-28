@@ -10,7 +10,7 @@ function logout(e) {
 }
 
 const Header = () => {
-  
+    
     return (
         <div>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -19,7 +19,7 @@ const Header = () => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="ml-auto">
                         <Nav.Link href="/dashboard">Dashboard</Nav.Link>
-                        <Nav.Link onClick={logout}>Logout</Nav.Link>
+                        { localStorage.getItem("token") && <Nav.Link onClick={logout}>Logout</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
