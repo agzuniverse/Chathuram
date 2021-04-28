@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { setConfig } from '../api';
 import { Form, Button, Container, Card } from 'react-bootstrap';
-import Header from './Header';
+import { Header } from './Header';
 import '../css/forms.css'
 
 const dbtypes = ['mysql', 'postgres'];
