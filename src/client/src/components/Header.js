@@ -1,5 +1,5 @@
 import React from 'react';
-import {Navbar, Nav} from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 
 function logout(e) {
     console.log("inside logout function")
@@ -10,7 +10,7 @@ function logout(e) {
 }
 
 const Header = () => {
-
+  
     return (
         <div>
             <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
