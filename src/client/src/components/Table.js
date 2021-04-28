@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
-import AddDataToDBTable from './AddDataToDBTable'
 
 const Row = (props) => {
     return props.content.map((value, index) => <td key={index}>{value}</td>);
@@ -9,6 +8,7 @@ const Row = (props) => {
 
 const Table = (props) => {
     console.log("props", props)
+
     const getKeys = () => {
         const keys = props.data.metadata?.map((meta, index) => meta.name);
         return keys;
@@ -34,7 +34,6 @@ const Table = (props) => {
                     {props.data && getRowsData()}
                 </tbody>
             </ReactBootStrap.Table>
-            {/* <AddDataToDBTable /> */}
         </div>
     );
 }

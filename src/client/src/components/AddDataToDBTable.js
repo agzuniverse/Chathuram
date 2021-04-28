@@ -80,8 +80,14 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
 const AddToDBTable = (props) => {
     // console.log("props(db)", props)
     const [elements, setElements] = useState(null);
+
     useEffect(() => {
-        addData({ "table": props.table }).then(data => setElements(data.metadata))
+        console.log("ADDDATA (RE)RENDERS");
+    })
+
+    useEffect(() => {
+      if (props.table)
+            addData({ "table": props.table }).then(data => setElements(data.metadata))
     }, [props.table]);
 
     const handleSave = (event) => {
