@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
 
 const Row = (props) => {
-    return props.content.map((value, index) => <td key={index}>{value}</td>);
+    const history = useHistory()
+    const handleClick = () => {
+        history.push({ pathname: '/edit', oldRow: props.content, tableName: props.tableName })
+    }
+    return props.content.map((value, index) => <td onClick={handleClick} key={index}>{value}</td>);
 }
 
 const Table = (props) => {
@@ -21,7 +26,7 @@ const Table = (props) => {
 
     const getRowsData = () => {
         const keys = getKeys();
-        return props.data.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} /></tr>)
+        return props.data.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} tableName={props.tableName} /></tr>)
     };
 
     return (

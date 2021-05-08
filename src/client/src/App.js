@@ -6,6 +6,7 @@ import useToken from './hooks/useToken';
 import useDBConfig from './hooks/useDBConfig';
 import { Header } from './components/Header';
 import Dashboard from './components/Dashboard';
+import RowEditor from './components/RowEditor'
 
 const App = () => {
   const { token, setToken } = useToken();
@@ -26,6 +27,7 @@ const App = () => {
         <Switch>
           <Route path="/dashboard/:tableName" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/edit" component={RowEditor} />
         </Switch>
       </BrowserRouter>
     </div>
