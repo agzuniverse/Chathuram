@@ -72,3 +72,19 @@ export async function readData(tableName) {
         body: JSON.stringify({ "table": tableName })
     }).then(data => data.json())
 }
+
+export async function updateData(updateData) {
+    isTokenExpired()
+    return fetch(`${api}/update`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        },
+        body: JSON.stringify({
+            "table": updateData.tableName,
+            "row": updateData.newData,
+            'old_row': updateData.oldData
+        })
+    }).then(data => data.json())
+}
