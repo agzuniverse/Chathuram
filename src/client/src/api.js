@@ -62,6 +62,7 @@ export async function getTablesList() {
 }
 
 export async function readData(tableName) {
+    console.log("Argument received is " + tableName)
     isTokenExpired()
     return fetch(`${api}/read`, {
         method: 'POST',
@@ -86,5 +87,17 @@ export async function updateData(updateData) {
             "row": updateData.newRow,
             'old_row': updateData.oldRow
         })
+    }).then(data => data.json())
+}
+
+export async function removeRow(rowDetail) {
+    isTokenExpired()
+    return fetch(`${api}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        },
+        body: JSON.stringify(rowDetail)
     }).then(data => data.json())
 }

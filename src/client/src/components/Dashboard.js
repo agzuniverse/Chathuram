@@ -9,7 +9,7 @@ import AddToDBTable from './AddDataToDBTable';
 const Dashboard = (props) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
     const [tableName, setTableName] = useState(null)
-    const [tableData, setTableData] = useState()
+    // const [tableData, setTableData] = useState()
 
     // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
@@ -23,10 +23,10 @@ const Dashboard = (props) => {
     }, []);
 
     // When tableName changes, make a request to fetch details of that table
-    useEffect(() => {
-        if (tableName)
-            readData(tableName).then(data => setTableData(data))
-    }, [tableName])
+    // useEffect(() => {
+    //     if (tableName) 
+    //         readData(tableName).then(data => setTableData(data))
+    // }, [tableName])
 
     // Called when a row of a table is clicked
     const editRow = (rowData) => {
@@ -49,7 +49,8 @@ const Dashboard = (props) => {
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
                     <AddToDBTable table={tableName} />
-                    <Table data={tableData} tableName={tableName} />
+                    <Table tableName={tableName} />
+                    {/* <Table data={tableData} tableName={tableName} /> */}
                 </Col>
             </Row>
         </Container>
