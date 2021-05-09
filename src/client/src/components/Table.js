@@ -6,18 +6,11 @@ import Delete from '@material-ui/icons/Delete';
 import { readData } from '../api';
 import { removeRow } from '../api';
 
-let rowDeleted = false
-const deleteRow = async (table, row, setRowDeleted) => {
-    console.log("deleting...")
+const deleteRow = async (table, row, setTableData) => {
     await removeRow({ "table": table, "row": row }) 
-    if (table)
-        console.log("table name is:" + table)
-        // readData(table).then(data => { 
-        //     setTableData(data)
-        // })
-        setRowDeleted(true)
-    // rowDeleted = true
-    console.log("deleted")
+    readData(table).then(data => { 
+        setTableData(data)
+    })
 }
 
 const Row = (props) => {
@@ -30,54 +23,35 @@ const Row = (props) => {
 
 const Table = (props) => {
     const [tableData, setTableData] = useState()
-    const [rowDeleted, setRowDeleted] = useState(false)
     useEffect(() => {
-        console.log("props received....")
-        console.log(props.tableName)
         if (props.tableName)
             readData(props.tableName).then(data => {
-                console.log("data")
-                console.log(data)
-                console.log("props.tableName is " + props.tableName)
                 setTableData(data)})
-    }, [props])
-
-    // useEffect(() => {
-    //     console.log("does this work???")
-    //     if (tableData?.tableName)
-    //         // console.log("Table data is ...")
-    //         // console.log(tableData)
-    //         readData(tableData.tableName).then(data => {
-    //             console.log(data)
-    //             setTableData(data)})
-    //     setRowDeleted(false)
-    // }, [rowDeleted])
+    }, [props.tableName])
 
     const getKeys = () => {
-        const keys = tableData.data.metadata?.map((meta, index) => meta.name);
+        const keys = tableData.metadata?.map((meta, index) => meta.name);
         return keys;
     };
 
     const getHeader = () => {
-        console.log("tableData inside getHeader...")
-        console.log(tableData)
         const keys = getKeys();
         return keys?.map((key, index) => <th key={index}>{key}</th>)
     };
 
     const getRowsData = () => {
         const keys = getKeys();
-        return tableData.data.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} tableName={tableData.tableName}/><td className="pointer"><Delete onClick={() => deleteRow(tableData.tableName, row, setRowDeleted)}/></td></tr>)
+        return tableData.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} tableName={props.tableName}/><td className="pointer"><Delete onClick={() => deleteRow(props.tableName, row, setTableData)}/></td></tr>)
     };
 
     return (
         <div>
             <ReactBootStrap.Table striped bordered hover>
                 <thead>
-                    <tr>{tableData?.data && getHeader()}</tr>
+                    <tr>{tableData && getHeader()}</tr>
                 </thead>
                 <tbody>
-                    {tableData?.data && getRowsData()}
+                    {tableData && getRowsData()}
                 </tbody>
             </ReactBootStrap.Table>
         </div>
