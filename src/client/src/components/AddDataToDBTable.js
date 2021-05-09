@@ -160,10 +160,10 @@ const AddToDBTable = (props) => {
                                         />;
                                     }
                                     return (
-                                        <Form.Group key={index} style={{ display: "grid", gridTemplateColumns: "20% 30% 50%"}}>
-                                            <span style={{ gridColumn: 1/5, justifySelf: "start"}}></span>
-                                            <label key={index + 1} htmlFor={name} style={{gridColumn: 3/10, justifySelf: "start"}}>{<strong>{name}</strong>}</label>
-                                            <span style={{ gridColumn: 1/2, justifySelf: "start"}}>{inputField}</span>
+                                        <Form.Group key={index} className="table-form">
+                                            <span></span>
+                                            <label key={index + 1} htmlFor={name}>{<strong>{name}</strong>}</label>
+                                            <span>{inputField}</span>
                                         </Form.Group>);
                                 }) : null}
                                 <Button variant="dark" type="submit" onClick={event => handleSave(event)}>
