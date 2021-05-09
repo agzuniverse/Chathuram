@@ -5,7 +5,7 @@ const RowEditor = (props) => {
     console.log(props)
     return (
         <div>
-            <AddDataToDBTable table={props.location.tableName} />
+            <AddDataToDBTable table={props.location.tableName} oldRow={props.location.oldRow} />
         </div>
     )
 }

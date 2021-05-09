@@ -82,12 +82,21 @@ const AddToDBTable = (props) => {
     const [elements, setElements] = useState(null);
 
     useEffect(() => {
-        console.log("ADDDATA (RE)RENDERS");
-    })
-
-    useEffect(() => {
-      if (props.table)
-            addData({ "table": props.table }).then(data => setElements(data.metadata))
+        if (props.table) {
+            addData({ "table": props.table }).then(data => {
+                // If oldRow is passed as a prop, the form is being used for editing a row and
+                // the values of the old row must be used to populate the form initially.
+                if (props.oldRow) {
+                    setElements(data.metadata.map((e, index) => {
+                        e.value = props.oldRow[index]
+                        return e
+                    }))
+                }
+                else {
+                    setElements(data.metadata)
+                }
+            })
+        }
     }, [props.table]);
 
     const handleSave = (event) => {
@@ -118,7 +127,6 @@ const AddToDBTable = (props) => {
                 <Form>
                     <Container>
                         {elements ? elements.map((column, index) => {
-                            console.log("Elements", elements)
                             const formType = getInputType(column.type.toLowerCase())
                             const maxLength = getMaxLength(column.type);
                             const value = column.value ? column.value : null
