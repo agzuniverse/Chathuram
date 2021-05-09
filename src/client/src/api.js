@@ -62,7 +62,6 @@ export async function getTablesList() {
 }
 
 export async function readData(tableName) {
-    console.log("Argument received is " + tableName)
     isTokenExpired()
     return fetch(`${api}/read`, {
         method: 'POST',

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { readData } from '../api';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
@@ -9,7 +8,6 @@ import AddToDBTable from './AddDataToDBTable';
 const Dashboard = (props) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
     const [tableName, setTableName] = useState(null)
-    // const [tableData, setTableData] = useState()
 
     // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
@@ -22,13 +20,6 @@ const Dashboard = (props) => {
         }
     }, []);
 
-    // When tableName changes, make a request to fetch details of that table
-    // useEffect(() => {
-    //     if (tableName) 
-    //         readData(tableName).then(data => setTableData(data))
-    // }, [tableName])
-
-    // Called when a row of a table is clicked
     const editRow = (rowData) => {
         window.location.href = `${window.location.href}dashboard/edit`
     }
@@ -50,7 +41,6 @@ const Dashboard = (props) => {
                 <Col xs={10} id="page-content-wrapper">
                     <AddToDBTable table={tableName} />
                     <Table tableName={tableName} />
-                    {/* <Table data={tableData} tableName={tableName} /> */}
                 </Col>
             </Row>
         </Container>
