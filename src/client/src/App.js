@@ -28,6 +28,7 @@ const App = () => {
           <Route path="/dashboard/:tableName" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/edit" component={RowEditor} />
+          <Route path="/create" component={RowEditor} />
         </Switch>
       </BrowserRouter>
     </div>
