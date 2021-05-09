@@ -8,7 +8,7 @@ const Row = (props) => {
     const handleClick = () => {
         history.push({ pathname: '/edit', oldRow: props.content, tableName: props.tableName })
     }
-    return props.content.map((value, index) => <td onClick={handleClick} key={index}>{value}</td>);
+    return props.content.map((value, index) => <td className="pointer" onClick={handleClick} key={index}>{value}</td>);
 }
 
 const Table = (props) => {
