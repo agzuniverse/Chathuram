@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { Form, Button, Container, Card } from 'react-bootstrap';
-import { addData } from '../api';
+import { addData, updateData } from '../api';
 import '../css/forms.css';
 import { FormContext } from '../FormContext';
 
@@ -78,21 +78,41 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
 
 
 const AddToDBTable = (props) => {
-    // console.log("props(db)", props)
     const [elements, setElements] = useState(null);
 
     useEffect(() => {
-        console.log("ADDDATA (RE)RENDERS");
-    })
-
-    useEffect(() => {
-      if (props.table)
-            addData({ "table": props.table }).then(data => setElements(data.metadata))
+        if (props.table) {
+            addData({ "table": props.table }).then(data => {
+                // If oldRow is passed as a prop, the form is being used for editing a row and
+                // the values of the old row must be used to populate the form initially.
+                if (props.oldRow) {
+                    setElements(data.metadata.map((e, index) => {
+                        e.value = props.oldRow[index]
+                        return e
+                    }))
+                }
+                else {
+                    setElements(data.metadata)
+                }
+            })
+        }
     }, [props.table]);
 
     const handleSave = (event) => {
         event.preventDefault();
-        console.log(elements)
+        // An existing row is being updated
+        if (props.oldRow) {
+            let oldRow = {}
+            let newRow = {}
+            elements.forEach((e, index) => oldRow[e.name] = props.oldRow[index])
+            elements.forEach(e => newRow[e.name] = e.value)
+            updateData({ tableName: props.table, oldRow, newRow }).then(data => {
+                console.log(data)
+                if (data.message === "Successfully Updated")
+                    // Go back to the page displaying the table on successfully updating a row
+                    window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
+            })
+        }
     }
 
     const handleChange = (elementToChange, event) => {

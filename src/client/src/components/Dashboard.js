@@ -28,6 +28,11 @@ const Dashboard = (props) => {
             readData(tableName).then(data => setTableData(data))
     }, [tableName])
 
+    // Called when a row of a table is clicked
+    const editRow = (rowData) => {
+        window.location.href = `${window.location.href}dashboard/edit`
+    }
+
     return (
         <Container fluid>
             <Row>
@@ -44,7 +49,7 @@ const Dashboard = (props) => {
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
                     <AddToDBTable table={tableName} />
-                    <Table data={tableData} />
+                    <Table data={tableData} tableName={tableName} />
                 </Col>
             </Row>
         </Container>
