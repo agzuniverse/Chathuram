@@ -45,7 +45,7 @@ const Table = (props) => {
     };
 
     return (
-        <div>
+        <div style={{marginTop: 40}}>
             <ReactBootStrap.Table striped bordered hover>
                 <thead>
                     <tr>{tableData && getHeader()}</tr>
