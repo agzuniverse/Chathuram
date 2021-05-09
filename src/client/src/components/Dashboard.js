@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { readData } from '../api';
-import { Container, Row, Col, Nav } from 'react-bootstrap';
+import { Container, Row, Col, Nav, Button } from 'react-bootstrap';
 import '../css/Dashboard.css'
 import Table from './Table';
 import AddToDBTable from './AddDataToDBTable';
@@ -10,6 +10,7 @@ const Dashboard = (props) => {
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
     const [tableName, setTableName] = useState(null)
     const [tableData, setTableData] = useState()
+    const [showCreateForm, setShowCreateForm] = useState(false);
 
     // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
@@ -48,7 +49,15 @@ const Dashboard = (props) => {
                     </Nav>
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
-                    <AddToDBTable table={tableName} />
+                    {!showCreateForm? 
+                        <Button variant="primary" type="submit" id="create-button" onClick={e => {
+                            e.preventDefault();
+                            setShowCreateForm(true);
+                        }}>
+                            Add Row
+                        </Button> : 
+                        <AddToDBTable table={tableName} />
+                    }
                     <Table data={tableData} tableName={tableName} />
                 </Col>
             </Row>
