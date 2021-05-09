@@ -83,8 +83,8 @@ export async function updateData(updateData) {
         },
         body: JSON.stringify({
             "table": updateData.tableName,
-            "row": updateData.newData,
-            'old_row': updateData.oldData
+            "row": updateData.newRow,
+            'old_row': updateData.oldRow
         })
     }).then(data => data.json())
 }

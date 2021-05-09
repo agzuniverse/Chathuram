@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
-import { addData } from '../api';
+import { addData, updateData } from '../api';
 import '../css/forms.css';
 import { FormContext } from '../FormContext';
 
@@ -78,7 +78,6 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
 
 
 const AddToDBTable = (props) => {
-    // console.log("props(db)", props)
     const [elements, setElements] = useState(null);
 
     useEffect(() => {
@@ -101,7 +100,19 @@ const AddToDBTable = (props) => {
 
     const handleSave = (event) => {
         event.preventDefault();
-        console.log(elements)
+        // An existing row is being updated
+        if (props.oldRow) {
+            let oldRow = {}
+            let newRow = {}
+            elements.forEach((e, index) => oldRow[e.name] = props.oldRow[index])
+            elements.forEach(e => newRow[e.name] = e.value)
+            updateData({ tableName: props.table, oldRow, newRow }).then(data => {
+                console.log(data)
+                if (data.message === "Successfully Updated")
+                    // Go back to the page displaying the table on successfully updating a row
+                    window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
+            })
+        }
     }
 
     const handleChange = (elementToChange, event) => {
