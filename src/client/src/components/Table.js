@@ -6,13 +6,6 @@ import Delete from '@material-ui/icons/Delete';
 import { readData } from '../api';
 import { removeRow } from '../api';
 
-const deleteRow = async (table, row, setTableData) => {
-    await removeRow({ "table": table, "row": row }) 
-    readData(table).then(data => { 
-        setTableData(data)
-    })
-}
-
 const Row = (props) => {
     const history = useHistory()
     const handleClick = () => {
@@ -26,8 +19,14 @@ const Table = (props) => {
     useEffect(() => {
         if (props.tableName)
             readData(props.tableName).then(data => {
-                setTableData(data)})
+                setTableData(data)
+            })
     }, [props.tableName])
+
+    const deleteRow = (row) => {
+        removeRow({ "table": props.tableName, "row": row }).then(() =>
+            readData(props.tableName).then(data => setTableData(data)))
+    }
 
     const getKeys = () => {
         const keys = tableData.metadata?.map((meta, index) => meta.name);
@@ -41,11 +40,11 @@ const Table = (props) => {
 
     const getRowsData = () => {
         const keys = getKeys();
-        return tableData.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} tableName={props.tableName}/><td className="pointer"><Delete onClick={() => deleteRow(props.tableName, row, setTableData)}/></td></tr>)
+        return tableData.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} tableName={props.tableName} /><td className="pointer"><Delete onClick={() => deleteRow(row)} /></td></tr>)
     };
 
     return (
-        <div style={{marginTop: 40}}>
+        <div style={{ marginTop: 40 }}>
             <ReactBootStrap.Table striped bordered hover>
                 <thead>
                     <tr>{tableData && getHeader()}</tr>
