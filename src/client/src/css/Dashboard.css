@@ -22,6 +22,11 @@
   font-size: 1.2rem;
 }
 
+#create-button {
+  margin: 20px;
+  float: right;
+}
+
 #page-content-wrapper {
   min-width: 0;
   width: 100%;
