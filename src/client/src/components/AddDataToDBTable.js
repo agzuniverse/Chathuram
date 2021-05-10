@@ -104,6 +104,7 @@ const AddToDBTable = (props) => {
         elements.forEach(e => newRow[e.name] = e.value)
         // An existing row is being updated
         if (props.oldRow) {
+            console.log("Updating")
             let oldRow = {}
             elements.forEach((e, index) => oldRow[e.name] = props.oldRow[index])
             updateData({ tableName: props.table, oldRow, newRow }).then(data => {
@@ -113,11 +114,14 @@ const AddToDBTable = (props) => {
                     window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
             })
         }
-        createData({ tableName: props.table, newRow }).then(data => {
-            console.log(data)
-            if (data.message === "Successfully Created")
-                location.reload();
-        })
+        else {
+            console.log("Creating", newRow)
+            createData({ tableName: props.table, newRow }).then(data => {
+                console.log(data)
+                if (data.message === "Successfully Created")
+                    window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
+            })
+        }
     }
 
     const handleChange = (elementToChange, event) => {
