@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Container, Row, Col, Nav } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Nav, Button } from 'react-bootstrap';
+import { useHistory } from "react-router-dom";
 import '../css/Dashboard.css'
 import Table from './Table';
-import AddToDBTable from './AddDataToDBTable';
-
 
 const Dashboard = (props) => {
+    const history = useHistory()
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
     const [tableName, setTableName] = useState(null)
 
@@ -39,7 +39,12 @@ const Dashboard = (props) => {
                     </Nav>
                 </Col>
                 <Col xs={10} id="page-content-wrapper">
-                    <AddToDBTable table={tableName} />
+                    <Button variant="primary" type="submit" id="create-button" onClick={e => {
+                        e.preventDefault();
+                        history.push({ pathname: '/create', oldRow: {}, tableName: tableName })
+                    }}>
+                        Add Row
+                    </Button>
                     <Table tableName={tableName} />
                 </Col>
             </Row>
