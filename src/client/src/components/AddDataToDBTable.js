@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { Form, Button, Container, Card } from 'react-bootstrap';
-import { addData, updateData } from '../api';
+import { fetchMetaData, createData, updateData } from '../api';
 import '../css/forms.css';
 import { FormContext } from '../FormContext';
 
@@ -82,7 +82,7 @@ const AddToDBTable = (props) => {
 
     useEffect(() => {
         if (props.table) {
-            addData({ "table": props.table }).then(data => {
+            fetchMetaData({ "table": props.table }).then(data => {
                 // If oldRow is passed as a prop, the form is being used for editing a row and
                 // the values of the old row must be used to populate the form initially.
                 if (props.oldRow) {
@@ -100,12 +100,12 @@ const AddToDBTable = (props) => {
 
     const handleSave = (event) => {
         event.preventDefault();
+        let newRow = {}
+        elements.forEach(e => newRow[e.name] = e.value)
         // An existing row is being updated
         if (props.oldRow) {
             let oldRow = {}
-            let newRow = {}
             elements.forEach((e, index) => oldRow[e.name] = props.oldRow[index])
-            elements.forEach(e => newRow[e.name] = e.value)
             updateData({ tableName: props.table, oldRow, newRow }).then(data => {
                 console.log(data)
                 if (data.message === "Successfully Updated")
@@ -113,6 +113,11 @@ const AddToDBTable = (props) => {
                     window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
             })
         }
+        createData({ tableName: props.table, newRow }).then(data => {
+            console.log(data)
+            if (data.message === "Successfully Created")
+                location.reload();
+        })
     }
 
     const handleChange = (elementToChange, event) => {
@@ -134,7 +139,7 @@ const AddToDBTable = (props) => {
 
     return useMemo(() => {
         return (
-            <Container>
+            <Container style={{marginTop: 40}}>
                 <Card>
                     <Card.Body>
                         <FormContext.Provider value={{ handleChange }}>
