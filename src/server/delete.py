@@ -25,3 +25,20 @@ def delete_table_data():
     except Exception as e:
         return {"message": e.__repr__()}, 400
     return {"message": "Successfully Deleted"}, 200
+
+
+@app.route("/delete_all", methods=["POST"])
+@cross_origin()
+@token_required
+def delete_all_table_data():
+    data = request.get_json()
+    table = data.get("table")
+    if table not in db.get_tables_in_db():
+        return {"error": "Table does not exist"}, 400
+    current_table = Table(table, MetaData(), autoload_with=db.engine)
+    try:
+        db.session.execute(current_table.delete())
+        db.session.commit()
+    except Exception as e:
+        return {"message": e.__repr__()}, 400
+    return {"message": "Successfully Deleted All Rows"}, 200
