@@ -30,7 +30,7 @@ const Table = (props) => {
     };
 
     return (
-        <div style={{marginTop: 40}}>
+        <ReactBootStrap.Container style={{marginTop: 40}}>
             <ReactBootStrap.Table striped bordered hover>
                 <thead>
                     <tr>{props.data && getHeader()}</tr>
@@ -39,7 +39,7 @@ const Table = (props) => {
                     {props.data && getRowsData()}
                 </tbody>
             </ReactBootStrap.Table>
-        </div>
+        </ReactBootStrap.Container>
     );
 }
 

@@ -52,7 +52,7 @@ const Dashboard = (props) => {
                 <Col xs={10} id="page-content-wrapper">
                     <Button variant="primary" type="submit" id="create-button" onClick={e => {
                         e.preventDefault();
-                        history.push({ pathname: '/create', oldRow: {}, tableName: tableName })
+                        history.push({ pathname: '/create', tableName: tableName })
                     }}>
                         Add Row
                     </Button>
