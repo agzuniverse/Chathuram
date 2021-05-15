@@ -103,3 +103,15 @@ export async function updateData(updateData) {
         })
     }).then(data => data.json())
 }
+
+export async function removeRow(rowDetail) {
+    isTokenExpired()
+    return fetch(`${api}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        },
+        body: JSON.stringify(rowDetail)
+    }).then(data => data.json())
+}

@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
+import Delete from '@material-ui/icons/Delete';
+import { readData } from '../api';
+import { removeRow } from '../api';
 
 const Row = (props) => {
     const history = useHistory()
@@ -12,10 +15,21 @@ const Row = (props) => {
 }
 
 const Table = (props) => {
-    console.log("props", props)
+    const [tableData, setTableData] = useState()
+    useEffect(() => {
+        if (props.tableName)
+            readData(props.tableName).then(data => {
+                setTableData(data)
+            })
+    }, [props.tableName])
+
+    const deleteRow = (row) => {
+        removeRow({ "table": props.tableName, "row": row }).then(() =>
+            readData(props.tableName).then(data => setTableData(data)))
+    }
 
     const getKeys = () => {
-        const keys = props.data.metadata?.map((meta, index) => meta.name);
+        const keys = tableData.metadata?.map((meta, index) => meta.name);
         return keys;
     };
 
@@ -26,17 +40,17 @@ const Table = (props) => {
 
     const getRowsData = () => {
         const keys = getKeys();
-        return props.data.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} tableName={props.tableName} /></tr>)
+        return tableData.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} tableName={props.tableName} /><td className="pointer"><Delete onClick={() => deleteRow(row)} /></td></tr>)
     };
 
     return (
         <ReactBootStrap.Container style={{marginTop: 40}}>
             <ReactBootStrap.Table striped bordered hover>
                 <thead>
-                    <tr>{props.data && getHeader()}</tr>
+                    <tr>{tableData && getHeader()}</tr>
                 </thead>
                 <tbody>
-                    {props.data && getRowsData()}
+                    {tableData && getRowsData()}
                 </tbody>
             </ReactBootStrap.Table>
         </ReactBootStrap.Container>

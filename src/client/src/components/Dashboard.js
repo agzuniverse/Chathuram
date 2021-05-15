@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { readData } from '../api';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav, Button } from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
 import '../css/Dashboard.css'
 import Table from './Table';
-import AddToDBTable from './AddDataToDBTable';
-
 
 const Dashboard = (props) => {
     const history = useHistory()
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
     const [tableName, setTableName] = useState(null)
-    const [tableData, setTableData] = useState()
 
     // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
@@ -24,13 +20,6 @@ const Dashboard = (props) => {
         }
     }, []);
 
-    // When tableName changes, make a request to fetch details of that table
-    useEffect(() => {
-        if (tableName)
-            readData(tableName).then(data => setTableData(data))
-    }, [tableName])
-
-    // Called when a row of a table is clicked
     const editRow = (rowData) => {
         window.location.href = `${window.location.href}dashboard/edit`
     }
@@ -56,7 +45,7 @@ const Dashboard = (props) => {
                     }}>
                         Add Row
                     </Button>
-                    <Table data={tableData} tableName={tableName} />
+                    <Table tableName={tableName} />
                 </Col>
             </Row>
         </Container>
