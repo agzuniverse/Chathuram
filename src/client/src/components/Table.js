@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import Delete from '@material-ui/icons/Delete';
-import { readData } from '../api';
-import { removeRow } from '../api';
+import { readData, removeAllRows, removeRow } from '../api';
 
 const Row = (props) => {
     const history = useHistory()
@@ -16,6 +16,8 @@ const Row = (props) => {
 
 const Table = (props) => {
     const [tableData, setTableData] = useState()
+    const [rowsSelected, setRowsSelected] = useState([])
+
     useEffect(() => {
         if (props.tableName)
             readData(props.tableName).then(data => {
@@ -23,8 +25,31 @@ const Table = (props) => {
             })
     }, [props.tableName])
 
+    const updateRowsSelected = (e, row) => {
+        const oldRowsSelected = rowsSelected
+        let newRowsSelected
+        if (e.target.checked) {
+            newRowsSelected = oldRowsSelected.concat([row])
+        }
+        else {
+            newRowsSelected = oldRowsSelected.filter((current) => JSON.stringify(current) != JSON.stringify(row))
+        }
+        setRowsSelected(newRowsSelected)
+    }
+
     const deleteRow = (row) => {
-        removeRow({ "table": props.tableName, "row": row }).then(() =>
+        removeRow({ "table": props.tableName, "rows": [row] }).then(() =>
+            readData(props.tableName).then(data => setTableData(data)))
+    }
+
+    const deleteAllRows = () => {
+        removeAllRows(props.tableName).then(() =>
+            readData(props.tableName).then(data => setTableData(data)))
+    } 
+
+    const deleteSelectedRows = () => {
+        // get all selected items
+        removeRow({ "table": props.tableName, "rows": rowsSelected }).then(() =>
             readData(props.tableName).then(data => setTableData(data)))
     }
 
@@ -40,7 +65,17 @@ const Table = (props) => {
 
     const getRowsData = () => {
         const keys = getKeys();
-        return tableData.rows?.map((row, index) => <tr key={index}><Row key={index} content={row} tableName={props.tableName} /><td className="pointer"><Delete onClick={() => deleteRow(row)} /></td></tr>)
+        return tableData.rows?.map((row, index) => 
+            <tr key={index}>
+                <Row key={index} content={row} tableName={props.tableName} />
+                <td className="pointer"><Delete onClick={() => deleteRow(row)} /></td>
+                <td>
+                    <input
+                        type="checkbox"
+                        onClick={(e) => updateRowsSelected(e, row)} 
+                    />
+                </td>
+            </tr>)
     };
 
     return (
@@ -53,6 +88,16 @@ const Table = (props) => {
                     {tableData && getRowsData()}
                 </tbody>
             </ReactBootStrap.Table>
+            <Button variant="primary" type="submit" id="delete-all-button" onClick={e => {
+                e.preventDefault();
+                deleteAllRows()
+            }}>
+                Delete all rows</Button>
+            <Button variant="primary" type="submit" id="delete-selected-button" onClick={e => {
+                e.preventDefault();
+                deleteSelectedRows()
+            }}>
+                Delete selected rows</Button>
         </div>
     );
 }
