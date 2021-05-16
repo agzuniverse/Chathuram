@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { loginUser } from '../api';
+import { ErrorContext } from '../Contexts';
 import { Form, Button, Container, Card } from 'react-bootstrap';
 import { Header } from './Header';
 import '../css/forms.css'
@@ -8,6 +9,7 @@ import '../css/forms.css'
 const Login = ({ setToken }) => {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
+    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -15,7 +17,10 @@ const Login = ({ setToken }) => {
             username,
             password
         });
-        if (token.error) console.log(token.error)
+        if (token.error) {
+            setErrorMessage(token.error)
+            setShowError(true);
+        }
         else setToken(token);
     }
 
