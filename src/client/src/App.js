@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './components/Login';
@@ -9,16 +10,21 @@ import Dashboard from './components/Dashboard';
 import RowEditor from './components/RowEditor'
 import RowCreator from './components/RowCreator'
 import Error from './components/Error';
+import { ErrorContext } from './Contexts';
 
 const App = () => {
   const { token, setToken } = useToken();
   const { dbConfig, setDBConfig } = useDBConfig();
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   if (!token) {
     return (
       <>
-        <Login setToken={setToken} />
-        <Error />
+        <ErrorContext.Provider value={{ showError, setShowError, errorMessage, setErrorMessage }}>
+          <Login setToken={setToken} />
+          <Error />
+        </ErrorContext.Provider>
       </>
     )
   }

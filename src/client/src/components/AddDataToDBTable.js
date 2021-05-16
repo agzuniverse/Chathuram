@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { Form, Button, Container, Card } from 'react-bootstrap';
 import { fetchMetaData, createData, updateData } from '../api';
 import '../css/forms.css';
-import { FormContext } from '../FormContext';
+import { FormContext } from '../Contexts';
 
 const getInputType = (type) => {
     if (type.includes("varchar")) {
@@ -143,7 +143,7 @@ const AddToDBTable = (props) => {
 
     return useMemo(() => {
         return (
-            <Container style={{marginTop: 40}}>
+            <Container style={{ marginTop: 40 }}>
                 <Card>
                     <Card.Body>
                         <FormContext.Provider value={{ handleChange }}>
