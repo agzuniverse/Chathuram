@@ -8,13 +8,19 @@ import { Header } from './components/Header';
 import Dashboard from './components/Dashboard';
 import RowEditor from './components/RowEditor'
 import RowCreator from './components/RowCreator'
+import Error from './components/Error';
 
 const App = () => {
   const { token, setToken } = useToken();
   const { dbConfig, setDBConfig } = useDBConfig();
 
   if (!token) {
-    return <Login setToken={setToken} />
+    return (
+      <>
+        <Login setToken={setToken} />
+        <Error />
+      </>
+    )
   }
 
   if (!dbConfig) {
