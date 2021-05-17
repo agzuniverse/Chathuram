@@ -62,7 +62,7 @@ export async function getTablesList() {
 }
 
 export async function readData(tableName, pageNum) {
-    if(pageNum === null){
+    if(pageNum === null || pageNum === undefined){
         pageNum = 1
     }
     console.log(pageNum)
@@ -117,5 +117,17 @@ export async function removeRow(rowDetail) {
             "x-access-token": JSON.parse(localStorage.getItem('token')).token
         },
         body: JSON.stringify(rowDetail)
+    }).then(data => data.json())
+}
+
+export async function removeAllRows(tableName) {
+    isTokenExpired()
+    return fetch(`${api}/delete_all`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        },
+        body: JSON.stringify({"table": tableName})
     }).then(data => data.json())
 }
