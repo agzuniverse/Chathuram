@@ -3,6 +3,7 @@ from flask import request
 import db
 from sqlalchemy import Table, MetaData
 from flask_cors import cross_origin
+from sqlalchemy.exc import OperationalError
 
 
 @app.route("/delete", methods=["POST"])
@@ -22,6 +23,6 @@ def delete_table_data():
     try:
         db.session.query(current_table).filter_by(**row_to_be_deleted).delete()
         db.session.commit()
-    except Exception as e:
-        return {"message": e.__repr__()}, 400
+    except OperationalError as e:
+        return {"error": e.orig}, 400
     return {"message": "Successfully Deleted"}, 200

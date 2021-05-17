@@ -33,15 +33,22 @@ const Table = (props) => {
     }, [props.tableName])
 
     const deleteRow = (row) => {
-        removeRow({ "table": props.tableName, "row": row }).then(() =>
-            readData(props.tableName).then(data => {
-                if (data.error) {
-                    setErrorMessage(data.error)
-                    setShowError(true);
-                }
-                else
-                    setTableData(data)
-            }))
+        removeRow({ "table": props.tableName, "row": row }).then(data => {
+            if (data.error) {
+                setErrorMessage(data.error)
+                setShowError(true);
+            }
+            else {
+                readData(props.tableName).then(data => {
+                    if (data.error) {
+                        setErrorMessage(data.error)
+                        setShowError(true);
+                    }
+                    else
+                        setTableData(data)
+                })
+            }
+        })
     }
 
     const getKeys = () => {
