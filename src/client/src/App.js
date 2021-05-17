@@ -46,8 +46,7 @@ const App = () => {
       <ErrorContext.Provider value={{ showError, setShowError, errorMessage, setErrorMessage }}>
         <BrowserRouter>
           <Switch>
-            <Route path="/dashboard/:tableName" component={Dashboard} />
-            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/dashboard/:tableName?/:pageNum?" component={Dashboard} />
             <Route path="/edit" component={RowEditor} />
             <Route path="/create" component={RowCreator} />
           </Switch>
