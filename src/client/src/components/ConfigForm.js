@@ -34,7 +34,7 @@ const ConfigForm = ({ setDBConfig }) => {
         else {
             setDBConfig(res);
             // Redirect to dashboard on successfully establishing DB connection
-            window.location.replace(`${window.location.href}dashboard`)
+            window.location.replace(`${window.location.origin}dashboard`)
         }
     }
 
