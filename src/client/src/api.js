@@ -40,7 +40,7 @@ export async function setConfig(config) {
     }).then(data => data.json())
 }
 
-export async function addData(tableName) {
+export async function fetchMetaData(tableName) {
     isTokenExpired()
     return fetch(`${api}/meta`, {
         method: 'POST',
@@ -70,6 +70,21 @@ export async function readData(tableName) {
             "x-access-token": JSON.parse(localStorage.getItem('token')).token
         },
         body: JSON.stringify({ "table": tableName })
+    }).then(data => data.json())
+}
+
+export async function createData(newData) {
+    isTokenExpired()
+    return fetch(`${api}/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        },
+        body: JSON.stringify({
+            "table": newData.tableName,
+            "row": newData.newRow
+        })
     }).then(data => data.json())
 }
 

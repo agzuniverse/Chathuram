@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
-import { Form, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import Delete from '@material-ui/icons/Delete';
 import { readData, removeAllRows, removeRow } from '../api';
 
@@ -50,7 +50,11 @@ const Table = (props) => {
     const deleteSelectedRows = () => {
         // get all selected items
         removeRow({ "table": props.tableName, "rows": rowsSelected }).then(() =>
-            readData(props.tableName).then(data => setTableData(data)))
+            {
+                setRowsSelected([])
+                setTableData([])
+                readData(props.tableName).then(data => setTableData(data))
+            })
     }
 
     const getKeys = () => {
@@ -79,7 +83,7 @@ const Table = (props) => {
     };
 
     return (
-        <div style={{ marginTop: 40 }}>
+        <ReactBootStrap.Container style={{marginTop: 40}}>
             <ReactBootStrap.Table striped bordered hover>
                 <thead>
                     <tr>{tableData && getHeader()}</tr>
@@ -98,7 +102,7 @@ const Table = (props) => {
                 deleteSelectedRows()
             }}>
                 Delete selected rows</Button>
-        </div>
+        </ReactBootStrap.Container>
     );
 }
 
