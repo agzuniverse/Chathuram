@@ -115,3 +115,15 @@ export async function removeRow(rowDetail) {
         body: JSON.stringify(rowDetail)
     }).then(data => data.json())
 }
+
+export async function removeAllRows(tableName) {
+    isTokenExpired()
+    return fetch(`${api}/delete_all`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        },
+        body: JSON.stringify({"table": tableName})
+    }).then(data => data.json())
+}
