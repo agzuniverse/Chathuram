@@ -43,14 +43,17 @@ const App = () => {
   return (
     <div className="App">
       <Header />
-      <BrowserRouter>
-        <Switch>
-          <Route path="/dashboard/:tableName" component={Dashboard} />
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="/edit" component={RowEditor} />
-          <Route path="/create" component={RowCreator} />
-        </Switch>
-      </BrowserRouter>
+      <ErrorContext.Provider value={{ showError, setShowError, errorMessage, setErrorMessage }}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/dashboard/:tableName" component={Dashboard} />
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/edit" component={RowEditor} />
+            <Route path="/create" component={RowCreator} />
+          </Switch>
+        </BrowserRouter>
+        <Error />
+      </ErrorContext.Provider>
     </div>
   );
 }
