@@ -16,17 +16,17 @@ def read_table_data():
     table = data.get("table")
     per_page = 100
     page_num = int(data.get("pageNum"))
-    page_num = (page_num-1)*per_page
+    page_num = (page_num - 1) * per_page
     if table not in db.get_tables_in_db():
         return {"error": "Table does not exist"}, 400
     # Get all rows from table
     current_table = Table(table, MetaData(), autoload_with=db.engine)
     size = db.session.query(current_table).count()
     if size % per_page == 0:
-        pages = size//per_page
+        pages = size // per_page
     else:
-        pages = size//per_page + 1
-    data = db.session.query(current_table).all()[page_num:page_num+per_page]
+        pages = size // per_page + 1
+    data = db.session.query(current_table).all()[page_num : page_num + per_page]
     metadata = db.get_metadata(table)
     result = []
     for row in data:

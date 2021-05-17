@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { Form, Button, Container, Card } from 'react-bootstrap';
 import { fetchMetaData, createData, updateData } from '../api';
 import '../css/forms.css';
-import { FormContext } from '../FormContext';
+import { FormContext, ErrorContext } from '../Contexts';
 
 const getInputType = (type) => {
     if (type.includes("varchar")) {
@@ -80,19 +80,26 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
 const AddToDBTable = (props) => {
     const [elements, setElements] = useState(null);
 
+    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
+
     useEffect(() => {
         if (props.table) {
             fetchMetaData({ "table": props.table }).then(data => {
-                // If oldRow is passed as a prop, the form is being used for editing a row and
-                // the values of the old row must be used to populate the form initially.
-                if (props.oldRow) {
-                    setElements(data.metadata.map((e, index) => {
-                        e.value = props.oldRow[index]
-                        return e
-                    }))
-                }
-                else {
-                    setElements(data.metadata)
+                if (data.error) {
+                    setErrorMessage(data.error)
+                    setShowError(true);
+                } else {
+                    // If oldRow is passed as a prop, the form is being used for editing a row and
+                    // the values of the old row must be used to populate the form initially.
+                    if (props.oldRow) {
+                        setElements(data.metadata.map((e, index) => {
+                            e.value = props.oldRow[index]
+                            return e
+                        }))
+                    }
+                    else {
+                        setElements(data.metadata)
+                    }
                 }
             })
         }
@@ -104,21 +111,25 @@ const AddToDBTable = (props) => {
         elements.forEach(e => newRow[e.name] = e.value)
         // An existing row is being updated
         if (props.oldRow) {
-            console.log("Updating")
             let oldRow = {}
             elements.forEach((e, index) => oldRow[e.name] = props.oldRow[index])
             updateData({ tableName: props.table, oldRow, newRow }).then(data => {
-                console.log(data)
-                if (data.message === "Successfully Updated")
+                if (data.error) {
+                    setErrorMessage(data.error)
+                    setShowError(true);
+                }
+                else if (data.message === "Successfully Updated")
                     // Go back to the page displaying the table on successfully updating a row
                     window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
             })
         }
         else {
-            console.log("Creating", newRow)
             createData({ tableName: props.table, newRow }).then(data => {
-                console.log(data)
-                if (data.message === "Successfully Created")
+                if (data.error) {
+                    setErrorMessage(data.error)
+                    setShowError(true);
+                }
+                else if (data.message === "Successfully Created")
                     window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
             })
         }
@@ -143,7 +154,7 @@ const AddToDBTable = (props) => {
 
     return useMemo(() => {
         return (
-            <Container style={{marginTop: 40}}>
+            <Container style={{ marginTop: 40 }}>
                 <Card>
                     <Card.Body>
                         <FormContext.Provider value={{ handleChange }}>

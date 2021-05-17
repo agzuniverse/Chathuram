@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import testData from './testData';
 import * as ReactBootstrap from 'react-bootstrap';
@@ -6,6 +6,7 @@ import {Container, Pagination} from 'react-bootstrap';
 import Delete from '@material-ui/icons/Delete';
 import { readData } from '../api';
 import { removeRow } from '../api';
+import { ErrorContext } from '../Contexts';
 
 const Row = (props) => {
     const history = useHistory()
@@ -17,16 +18,38 @@ const Row = (props) => {
 
 const Table = (props) => {
     const [tableData, setTableData] = useState()
+
+    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
+
     useEffect(() => {
         if (props.tableName)
             readData(props.tableName, props.pageNum).then(data => {
-                setTableData(data)
+                if (data.error) {
+                    setErrorMessage(data.error)
+                    setShowError(true);
+                }
+                else
+                    setTableData(data)
             })
     }, [props.tableName])
 
     const deleteRow = (row) => {
-        removeRow({ "table": props.tableName, "row": row }).then(() =>
-            readData(props.tableName).then(data => setTableData(data)))
+        removeRow({ "table": props.tableName, "row": row }).then(data => {
+            if (data.error) {
+                setErrorMessage(data.error)
+                setShowError(true);
+            }
+            else {
+                readData(props.tableName).then(data => {
+                    if (data.error) {
+                        setErrorMessage(data.error)
+                        setShowError(true);
+                    }
+                    else
+                        setTableData(data)
+                })
+            }
+        })
     }
 
     const getKeys = () => {
@@ -51,7 +74,7 @@ const Table = (props) => {
         pageNum = pageNum ? parseInt(pageNum) : 1;
         console.log("pages:", pages, "pageNum:", pageNum);
         let content = [];
-        let url = `http://localhost:3000/dashboard/${tableName}/`;
+        let url = `${window.location.href}dashboard/${tableName}/`;
         if(pageNum != 1)
             content.push(<Pagination.Prev href={url+(pageNum-1)}/>);
         if(pages < 7){
