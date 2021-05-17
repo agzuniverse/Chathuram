@@ -19,8 +19,8 @@ def login():
         return {"error": "Credentials are not configured in the server"}, 500
 
     data = request.get_json()
-    username_candidate = data["username"]
-    password_candidate = data["password"]
+    username_candidate = data.get("username")
+    password_candidate = data.get("password")
 
     if username_candidate == username and password_candidate == password:
         token = jwt.encode(
@@ -33,4 +33,4 @@ def login():
         )
         return {"token": token}
     else:
-        return {"error": "Incorrect username or password"}, 500
+        return {"error": "Incorrect username or password"}, 400

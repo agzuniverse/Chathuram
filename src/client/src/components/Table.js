@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
@@ -17,11 +17,17 @@ const Row = (props) => {
 const Table = (props) => {
     const [tableData, setTableData] = useState()
     const [rowsSelected, setRowsSelected] = useState([])
+    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
 
     useEffect(() => {
         if (props.tableName)
             readData(props.tableName).then(data => {
-                setTableData(data)
+                if (data.error) {
+                    setErrorMessage(data.error)
+                    setShowError(true);
+                }
+                else
+                    setTableData(data)
             })
     }, [props.tableName])
 
@@ -38,8 +44,22 @@ const Table = (props) => {
     }
 
     const deleteRow = (row) => {
-        removeRow({ "table": props.tableName, "rows": [row] }).then(() =>
-            readData(props.tableName).then(data => setTableData(data)))
+        removeRow({ "table": props.tableName, "row": [row] }).then(data => {
+            if (data.error) {
+                setErrorMessage(data.error)
+                setShowError(true);
+            }
+            else {
+                readData(props.tableName).then(data => {
+                    if (data.error) {
+                        setErrorMessage(data.error)
+                        setShowError(true);
+                    }
+                    else
+                        setTableData(data)
+                })
+            }
+        })
     }
 
     const deleteAllRows = () => {

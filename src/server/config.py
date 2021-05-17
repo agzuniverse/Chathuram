@@ -6,6 +6,7 @@ from __main__ import (
 import db
 from flask import request
 from flask_cors import cross_origin
+from sqlalchemy.exc import OperationalError
 
 
 @app.route("/config", methods=["POST"])
@@ -24,9 +25,13 @@ def db_config():
     if None in [username, password, url, port, db_name, db_type]:
         return {"error": "All required values not specified"}, 400
 
-    # Internal server error
-    if not db.establish_connection(username, password, url, port, db_name, db_type):
-        return {"error": "Failed to establish connection with the DB"}, 500
+    # Possible errors
+    try:
+        db.establish_connection(username, password, url, port, db_name, db_type)
+    except OperationalError as e:
+        return {
+            "error": "Failed to establish connection with the DB, {0}".format(e.orig)
+        }, 500
 
     # On successful connection, return list of tables in the DB
     tables = db.get_tables_in_db()
