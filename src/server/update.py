@@ -22,4 +22,4 @@ def update_table_data():
         db.session.commit()
         return {"message": "Successfully Updated"}, 200
     except OperationalError as e:
-        return {"error": "Integrity Error, {0}".format(e.orig)}, 400
+        return {"error": "Failed to update table, {0}".format(e.orig)}, 400
