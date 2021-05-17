@@ -2,7 +2,7 @@ from __main__ import app, token_required
 from flask import request
 import db
 from sqlalchemy import Table, MetaData
-from sqlaclhemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError
 from flask_cors import cross_origin
 
 
