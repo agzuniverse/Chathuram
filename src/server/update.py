@@ -1,7 +1,8 @@
 from __main__ import app, token_required
 from flask import request
 import db
-from sqlalchemy import Table, MetaData, exc
+from sqlalchemy import Table, MetaData
+from sqlaclhemy.exc import OperationalError
 from flask_cors import cross_origin
 
 
@@ -20,5 +21,5 @@ def update_table_data():
         db.session.query(current_table).filter_by(**old_row).update(row)
         db.session.commit()
         return {"message": "Successfully Updated"}, 200
-    except exc.IntegrityError:
-        return {"error": "Integrity Error"}, 400
+    except OperationalError as e:
+        return {"error": "Integrity Error, {0}".format(e.orig)}, 400
