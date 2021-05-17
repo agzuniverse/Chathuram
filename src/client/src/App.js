@@ -30,7 +30,14 @@ const App = () => {
   }
 
   if (!dbConfig) {
-    return <ConfigForm setDBConfig={setDBConfig} />
+    return (
+      <>
+        <ErrorContext.Provider value={{ showError, setShowError, errorMessage, setErrorMessage }}>
+          <ConfigForm setDBConfig={setDBConfig} />
+          <Error />
+        </ErrorContext.Provider>
+      </>
+    )
   }
 
   return (
