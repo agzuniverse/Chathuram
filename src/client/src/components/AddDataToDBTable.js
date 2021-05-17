@@ -85,16 +85,21 @@ const AddToDBTable = (props) => {
     useEffect(() => {
         if (props.table) {
             fetchMetaData({ "table": props.table }).then(data => {
-                // If oldRow is passed as a prop, the form is being used for editing a row and
-                // the values of the old row must be used to populate the form initially.
-                if (props.oldRow) {
-                    setElements(data.metadata.map((e, index) => {
-                        e.value = props.oldRow[index]
-                        return e
-                    }))
-                }
-                else {
-                    setElements(data.metadata)
+                if (data.error) {
+                    setErrorMessage(data.error)
+                    setShowError(true);
+                } else {
+                    // If oldRow is passed as a prop, the form is being used for editing a row and
+                    // the values of the old row must be used to populate the form initially.
+                    if (props.oldRow) {
+                        setElements(data.metadata.map((e, index) => {
+                            e.value = props.oldRow[index]
+                            return e
+                        }))
+                    }
+                    else {
+                        setElements(data.metadata)
+                    }
                 }
             })
         }
