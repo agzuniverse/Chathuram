@@ -119,10 +119,12 @@ const AddToDBTable = (props) => {
             })
         }
         else {
-            console.log("Creating", newRow)
             createData({ tableName: props.table, newRow }).then(data => {
-                console.log(data)
-                if (data.message === "Successfully Created")
+                if (data.error) {
+                    setErrorMessage(data.error)
+                    setShowError(true);
+                }
+                else if (data.message === "Successfully Created")
                     window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
             })
         }
