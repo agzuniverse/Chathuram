@@ -8,12 +8,16 @@ const Dashboard = (props) => {
     const history = useHistory()
     const tables = JSON.parse(localStorage.getItem('dbConfig'))?.tables
     const [tableName, setTableName] = useState(null)
+    const [pageNum, setPageNum] = useState(null)
 
     // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
         const { match: { params } } = props;
         if (params.tableName) {
             setTableName(params.tableName)
+            if (params.pageNum) {
+                setPageNum(params.pageNum)
+            }
         } else if (tables) {
             // When URL does not specify a table, display the first table
             setTableName(tables[0])
@@ -45,7 +49,7 @@ const Dashboard = (props) => {
                     }}>
                         Add Row
                     </Button>
-                    <Table tableName={tableName} />
+                    <Table tableName={tableName} pageNum={pageNum}/>
                 </Col>
             </Row>
         </Container>

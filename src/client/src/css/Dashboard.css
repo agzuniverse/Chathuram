@@ -34,3 +34,9 @@
 .pointer {
   cursor: pointer;
 }
+
+.pagination-parent {
+  margin-top: 5em;
+  display: grid;
+  place-items: center;
+}

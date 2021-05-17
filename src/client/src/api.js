@@ -61,7 +61,11 @@ export async function getTablesList() {
     }).then(data => data.json())
 }
 
-export async function readData(tableName) {
+export async function readData(tableName, pageNum) {
+    if(pageNum === null){
+        pageNum = 1
+    }
+    console.log(pageNum)
     isTokenExpired()
     return fetch(`${api}/read`, {
         method: 'POST',
@@ -69,7 +73,7 @@ export async function readData(tableName) {
             'Content-Type': 'application/json',
             "x-access-token": JSON.parse(localStorage.getItem('token')).token
         },
-        body: JSON.stringify({ "table": tableName })
+        body: JSON.stringify({ "table": tableName, "pageNum": pageNum})
     }).then(data => data.json())
 }
 
