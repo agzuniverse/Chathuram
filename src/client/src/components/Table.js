@@ -62,7 +62,14 @@ const Table = (props) => {
 
     const deleteAllRows = () => {
         removeAllRows(props.tableName).then(() =>
-            readData(props.tableName).then(data => setTableData(data)))
+            readData(props.tableName).then(data => {
+                if (data.error) {
+                    setErrorMessage(data.error)
+                }
+                else
+                    setTableData(data)
+            })
+        )
     }
 
     const deleteSelectedRows = () => {
@@ -70,7 +77,13 @@ const Table = (props) => {
         removeRow({ "table": props.tableName, "rows": rowsSelected }).then(() => {
             setRowsSelected([])
             setTableData([])
-            readData(props.tableName).then(data => setTableData(data))
+            readData(props.tableName).then(data => {
+                if (data.error) {
+                    setErrorMessage(data.error)
+                }
+                else
+                    setTableData(data)
+            })
         })
     }
 
