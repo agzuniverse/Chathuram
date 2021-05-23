@@ -30,5 +30,6 @@ def read_table_data():
     metadata = db.get_metadata(table)
     result = []
     for row in data:
-        result.append(list(row))
+        # Convert everything to string to avoid JSON serialization issues
+        result.append([str(x) for x in list(row)])
     return {"metadata": metadata, "rows": result, "pages": pages}, 200
