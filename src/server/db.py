@@ -19,6 +19,10 @@ def get_columns(self, table_name, schema=None, **kw):
         col_defs = self.dialect.get_columns(
             conn, table_name, schema, info_cache=self.info_cache, **kw
         )
+    # remove single quotes within double quotes
+    for col_def in col_defs:
+        if col_def["default"] is not None:
+            col_def["default"] = "".join(col_def["default"].split("'"))
     return col_defs
 
 
