@@ -26,7 +26,7 @@ def delete_table_data():
             db.session.query(current_table).filter_by(**row_to_be_deleted).delete()
             db.session.commit()
         except OperationalError as e:
-            return {"error": "Failed to delete table, {0}".format(e.orig)}, 400
+            return {"error": "Failed to delete rows, {0}".format(e.orig)}, 400
     return {"message": "Successfully Deleted"}, 200
 
 
@@ -43,5 +43,5 @@ def delete_all_table_data():
         db.session.execute(current_table.delete())
         db.session.commit()
     except Exception as e:
-        return {"message": e.__repr__()}, 400
+        return {"error": "Failed to delete table, {0}".format(e.orig)}, 400
     return {"message": "Successfully Deleted All Rows"}, 200

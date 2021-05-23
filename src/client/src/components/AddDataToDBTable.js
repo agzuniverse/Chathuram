@@ -8,7 +8,7 @@ const getInputType = (type) => {
     if (type.includes("varchar")) {
         return "text";
     }
-    if (type.includes("integer") || type.includes("float")) {
+    if (type.includes("integer") || type.includes("float") || type.includes("decimal")) {
         return "number";
     }
     if (type.includes("tinyint")) {
@@ -80,14 +80,14 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
 const AddToDBTable = (props) => {
     const [elements, setElements] = useState(null);
 
-    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     useEffect(() => {
         if (props.table) {
+            clearError()
             fetchMetaData({ "table": props.table }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
-                    setShowError(true);
                 } else {
                     // If oldRow is passed as a prop, the form is being used for editing a row and
                     // the values of the old row must be used to populate the form initially.
@@ -113,10 +113,10 @@ const AddToDBTable = (props) => {
         if (props.oldRow) {
             let oldRow = {}
             elements.forEach((e, index) => oldRow[e.name] = props.oldRow[index])
+            clearError()
             updateData({ tableName: props.table, oldRow, newRow }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
-                    setShowError(true);
                 }
                 else if (data.message === "Successfully Updated")
                     // Go back to the page displaying the table on successfully updating a row
@@ -124,10 +124,10 @@ const AddToDBTable = (props) => {
             })
         }
         else {
+            clearError()
             createData({ tableName: props.table, newRow }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
-                    setShowError(true);
                 }
                 else if (data.message === "Successfully Created")
                     window.location.replace(`${window.location.origin}/dashboard/${props.table}`)

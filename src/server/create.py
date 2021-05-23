@@ -2,7 +2,7 @@ from __main__ import app, token_required
 import db
 from flask import request
 from sqlalchemy import Table, MetaData
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, DataError
 from flask_cors import cross_origin
 
 
@@ -20,5 +20,5 @@ def create_table_data():
         db.engine.execute(current_table.insert(), row)
         db.session.commit()
         return {"message": "Successfully Created"}, 200
-    except OperationalError as e:
+    except (OperationalError, DataError) as e:
         return {"error": "Failed to create row, {0}".format(e.orig)}, 400

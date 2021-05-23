@@ -4,12 +4,12 @@ import { ErrorContext } from '../Contexts';
 import "../css/errors.css"
 
 const Error = () => {
-    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     return (
-        showError ?
+        errorMessage ?
             <div className='fixedPositionErrorBox'>
-                <Alert variant='danger' onClose={() => setShowError(false)} dismissible>
+                <Alert variant='danger' onClose={() => clearError()} dismissible>
                     <Alert.Heading>Error</Alert.Heading>
                     <p>
                         {errorMessage}
