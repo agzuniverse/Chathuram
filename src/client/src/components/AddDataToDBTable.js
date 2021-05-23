@@ -84,6 +84,7 @@ const AddToDBTable = (props) => {
 
     useEffect(() => {
         if (props.table) {
+            clearError()
             fetchMetaData({ "table": props.table }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
@@ -112,6 +113,7 @@ const AddToDBTable = (props) => {
         if (props.oldRow) {
             let oldRow = {}
             elements.forEach((e, index) => oldRow[e.name] = props.oldRow[index])
+            clearError()
             updateData({ tableName: props.table, oldRow, newRow }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
@@ -122,6 +124,7 @@ const AddToDBTable = (props) => {
             })
         }
         else {
+            clearError()
             createData({ tableName: props.table, newRow }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)

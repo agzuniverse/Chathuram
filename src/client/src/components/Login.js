@@ -13,6 +13,7 @@ const Login = ({ setToken }) => {
 
     const handleSubmit = async e => {
         e.preventDefault();
+        clearError()
         const token = await loginUser({
             username,
             password

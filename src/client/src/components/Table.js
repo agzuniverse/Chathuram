@@ -21,7 +21,8 @@ const Table = (props) => {
     const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     useEffect(() => {
-        if (props.tableName)
+        if (props.tableName) {
+            clearError()
             readData(props.tableName).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
@@ -29,6 +30,7 @@ const Table = (props) => {
                 else
                     setTableData(data)
             })
+        }
     }, [props.tableName])
 
     const updateRowsSelected = (e, row) => {
@@ -44,6 +46,7 @@ const Table = (props) => {
     }
 
     const deleteRow = (row) => {
+        clearError()
         removeRow({ "table": props.tableName, "rows": [row] }).then(data => {
             if (data.error) {
                 setErrorMessage(data.error)
@@ -61,6 +64,7 @@ const Table = (props) => {
     }
 
     const deleteAllRows = () => {
+        clearError()
         removeAllRows(props.tableName).then(() =>
             readData(props.tableName).then(data => {
                 if (data.error) {
@@ -74,6 +78,7 @@ const Table = (props) => {
 
     const deleteSelectedRows = () => {
         // get all selected items
+        clearError()
         removeRow({ "table": props.tableName, "rows": rowsSelected }).then(() => {
             setRowsSelected([])
             setTableData([])

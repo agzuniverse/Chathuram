@@ -19,6 +19,7 @@ const ConfigForm = ({ setDBConfig }) => {
 
     const handleSubmit = async e => {
         e.preventDefault();
+        clearError()
         const res = await setConfig({
             username,
             password,
