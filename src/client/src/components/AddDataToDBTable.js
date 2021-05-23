@@ -55,7 +55,7 @@ const Checkbox = ({ id, type, name, value }) => {
             id={id}
             type={type}
             name={name}
-            checked={value ?? false}
+            checked={value == "1" ? true : false}
             onChange={event => handleChange(id, event)}
         />);
 }
