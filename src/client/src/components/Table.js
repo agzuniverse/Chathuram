@@ -45,7 +45,7 @@ const Table = (props) => {
     }
 
     const deleteRow = (row) => {
-        removeRow({ "table": props.tableName, "row": [row] }).then(data => {
+        removeRow({ "table": props.tableName, "rows": [row] }).then(data => {
             if (data.error) {
                 setErrorMessage(data.error)
                 setShowError(true);
