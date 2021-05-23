@@ -4,12 +4,19 @@ import { ErrorContext } from '../Contexts';
 import "../css/errors.css"
 
 const Error = () => {
-    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage } = useContext(ErrorContext)
+
+    // Setting error message to a blank string hides the error alert.
+    // This function exists only for semantic clarity, since clearError() makes more sense
+    // than setErrorMessage('')
+    const clearError = () => {
+        setErrorMessage('')
+    }
 
     return (
-        showError ?
+        errorMessage ?
             <div className='fixedPositionErrorBox'>
-                <Alert variant='danger' onClose={() => setShowError(false)} dismissible>
+                <Alert variant='danger' onClose={() => clearError()} dismissible>
                     <Alert.Heading>Error</Alert.Heading>
                     <p>
                         {errorMessage}

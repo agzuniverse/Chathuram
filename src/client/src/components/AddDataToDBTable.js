@@ -80,14 +80,13 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
 const AddToDBTable = (props) => {
     const [elements, setElements] = useState(null);
 
-    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage } = useContext(ErrorContext)
 
     useEffect(() => {
         if (props.table) {
             fetchMetaData({ "table": props.table }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
-                    setShowError(true);
                 } else {
                     // If oldRow is passed as a prop, the form is being used for editing a row and
                     // the values of the old row must be used to populate the form initially.
@@ -116,7 +115,6 @@ const AddToDBTable = (props) => {
             updateData({ tableName: props.table, oldRow, newRow }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
-                    setShowError(true);
                 }
                 else if (data.message === "Successfully Updated")
                     // Go back to the page displaying the table on successfully updating a row
@@ -127,7 +125,6 @@ const AddToDBTable = (props) => {
             createData({ tableName: props.table, newRow }).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
-                    setShowError(true);
                 }
                 else if (data.message === "Successfully Created")
                     window.location.replace(`${window.location.origin}/dashboard/${props.table}`)

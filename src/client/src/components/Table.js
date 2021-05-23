@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
-import {Container, Pagination, Button} from 'react-bootstrap';
+import { Container, Pagination, Button } from 'react-bootstrap';
 import Delete from '@material-ui/icons/Delete';
 import { readData, removeAllRows, removeRow } from '../api';
 import { ErrorContext } from '../Contexts';
@@ -18,14 +18,13 @@ const Row = (props) => {
 const Table = (props) => {
     const [tableData, setTableData] = useState()
     const [rowsSelected, setRowsSelected] = useState([])
-    const { showError, setShowError, errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage } = useContext(ErrorContext)
 
     useEffect(() => {
         if (props.tableName)
             readData(props.tableName).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
-                    setShowError(true);
                 }
                 else
                     setTableData(data)
@@ -48,13 +47,11 @@ const Table = (props) => {
         removeRow({ "table": props.tableName, "rows": [row] }).then(data => {
             if (data.error) {
                 setErrorMessage(data.error)
-                setShowError(true);
             }
             else {
                 readData(props.tableName, props.pageNum).then(data => {
                     if (data.error) {
                         setErrorMessage(data.error)
-                        setShowError(true);
                     }
                     else
                         setTableData(data)
@@ -66,16 +63,15 @@ const Table = (props) => {
     const deleteAllRows = () => {
         removeAllRows(props.tableName).then(() =>
             readData(props.tableName).then(data => setTableData(data)))
-    } 
+    }
 
     const deleteSelectedRows = () => {
         // get all selected items
-        removeRow({ "table": props.tableName, "rows": rowsSelected }).then(() =>
-            {
-                setRowsSelected([])
-                setTableData([])
-                readData(props.tableName).then(data => setTableData(data))
-            })
+        removeRow({ "table": props.tableName, "rows": rowsSelected }).then(() => {
+            setRowsSelected([])
+            setTableData([])
+            readData(props.tableName).then(data => setTableData(data))
+        })
     }
 
     const getKeys = () => {
@@ -90,76 +86,76 @@ const Table = (props) => {
 
     const getRowsData = () => {
         const keys = getKeys();
-        return tableData.rows?.map((row, index) => 
+        return tableData.rows?.map((row, index) =>
             <tr key={index}>
                 <Row key={index} content={row} tableName={props.tableName} />
                 <td className="pointer"><Delete onClick={() => deleteRow(row)} /></td>
                 <td>
                     <input
                         type="checkbox"
-                        onClick={(e) => updateRowsSelected(e, row)} 
+                        onClick={(e) => updateRowsSelected(e, row)}
                     />
                 </td>
             </tr>)
     };
 
     const getPagination = () => {
-        let {pages} = tableData;
-        let {tableName, pageNum} = props;
+        let { pages } = tableData;
+        let { tableName, pageNum } = props;
         pages = parseInt(pages);
         pageNum = pageNum ? parseInt(pageNum) : 1;
         console.log("pages:", pages, "pageNum:", pageNum);
         let content = [];
         let url = `${window.location.origin}/dashboard/${tableName}/`;
-        if(pageNum != 1)
-            content.push(<Pagination.Prev href={url+(pageNum-1)}/>);
-        if(pages < 7){
-            for (let i=1; i<=pages; i++) {
-                content.push(<Pagination.Item key={i} href={url+i}>{i}</Pagination.Item>);
+        if (pageNum != 1)
+            content.push(<Pagination.Prev href={url + (pageNum - 1)} />);
+        if (pages < 7) {
+            for (let i = 1; i <= pages; i++) {
+                content.push(<Pagination.Item key={i} href={url + i}>{i}</Pagination.Item>);
             }
         }
-        else{
-            if(pageNum < 4){
-                for (let i=1; i<=4; i++) {
-                    content.push(<Pagination.Item key={i} href={url+i}>{i}</Pagination.Item>);
+        else {
+            if (pageNum < 4) {
+                for (let i = 1; i <= 4; i++) {
+                    content.push(<Pagination.Item key={i} href={url + i}>{i}</Pagination.Item>);
                 }
-                let mid = Math.floor((4+pages)/2);
-                content.push(<Pagination.Ellipsis href={url+mid}/>);
-                content.push(<Pagination.Item href={url+pages}>{pages}</Pagination.Item>);
+                let mid = Math.floor((4 + pages) / 2);
+                content.push(<Pagination.Ellipsis href={url + mid} />);
+                content.push(<Pagination.Item href={url + pages}>{pages}</Pagination.Item>);
             }
-            else if(pages - pageNum < 3){
-                for (let i=1; i<=2; i++) {
-                    content.push(<Pagination.Item key={i} href={url+i}>{i}</Pagination.Item>);
+            else if (pages - pageNum < 3) {
+                for (let i = 1; i <= 2; i++) {
+                    content.push(<Pagination.Item key={i} href={url + i}>{i}</Pagination.Item>);
                 }
-                let mid = Math.floor((pages-1)/2);
-                content.push(<Pagination.Ellipsis href={url+mid}/>);
-                for (let i=pages-3; i<=pages; i++) {
-                    content.push(<Pagination.Item key={i} href={url+i}>{i}</Pagination.Item>);
+                let mid = Math.floor((pages - 1) / 2);
+                content.push(<Pagination.Ellipsis href={url + mid} />);
+                for (let i = pages - 3; i <= pages; i++) {
+                    content.push(<Pagination.Item key={i} href={url + i}>{i}</Pagination.Item>);
                 }
             }
-            else{
-                content.push(<Pagination.Item key={1} href={url+"1"}>{1}</Pagination.Item>);
-                let mid1 = Math.floor(pageNum/2);
-                content.push(<Pagination.Ellipsis href={url+mid1}/>);
-                for (let i=pageNum-1; i<=pageNum+1; i++) {
-                    content.push(<Pagination.Item key={i} href={url+i}>{i}</Pagination.Item>);
+            else {
+                content.push(<Pagination.Item key={1} href={url + "1"}>{1}</Pagination.Item>);
+                let mid1 = Math.floor(pageNum / 2);
+                content.push(<Pagination.Ellipsis href={url + mid1} />);
+                for (let i = pageNum - 1; i <= pageNum + 1; i++) {
+                    content.push(<Pagination.Item key={i} href={url + i}>{i}</Pagination.Item>);
                 }
-                let mid2 = Math.floor((pageNum+1+pages)/2);
-                content.push(<Pagination.Ellipsis href={url+mid2}/>);
-                content.push(<Pagination.Item key={pages} href={url+pages}>{pages}</Pagination.Item>);
+                let mid2 = Math.floor((pageNum + 1 + pages) / 2);
+                content.push(<Pagination.Ellipsis href={url + mid2} />);
+                content.push(<Pagination.Item key={pages} href={url + pages}>{pages}</Pagination.Item>);
             }
         }
-        if(pageNum != pages)
-            content.push(<Pagination.Next href={url+(pageNum+1)}/>);
+        if (pageNum != pages)
+            content.push(<Pagination.Next href={url + (pageNum + 1)} />);
         return (
-        <Pagination>
-            {content}
-        </Pagination>
+            <Pagination>
+                {content}
+            </Pagination>
         )
     }
 
     return (
-        <Container style={{marginTop: 40}}>
+        <Container style={{ marginTop: 40 }}>
             <ReactBootStrap.Table striped bordered hover>
                 <thead>
                     <tr>{tableData && getHeader()}</tr>

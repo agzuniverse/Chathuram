@@ -15,13 +15,12 @@ import { ErrorContext } from './Contexts';
 const App = () => {
   const { token, setToken } = useToken();
   const { dbConfig, setDBConfig } = useDBConfig();
-  const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   if (!token) {
     return (
       <>
-        <ErrorContext.Provider value={{ showError, setShowError, errorMessage, setErrorMessage }}>
+        <ErrorContext.Provider value={{ errorMessage, setErrorMessage }}>
           <Login setToken={setToken} />
           <Error />
         </ErrorContext.Provider>
@@ -32,7 +31,7 @@ const App = () => {
   if (!dbConfig) {
     return (
       <>
-        <ErrorContext.Provider value={{ showError, setShowError, errorMessage, setErrorMessage }}>
+        <ErrorContext.Provider value={{ errorMessage, setErrorMessage }}>
           <ConfigForm setDBConfig={setDBConfig} />
           <Error />
         </ErrorContext.Provider>
@@ -43,7 +42,7 @@ const App = () => {
   return (
     <div className="App">
       <Header />
-      <ErrorContext.Provider value={{ showError, setShowError, errorMessage, setErrorMessage }}>
+      <ErrorContext.Provider value={{ errorMessage, setErrorMessage }}>
         <BrowserRouter>
           <Switch>
             <Route path="/dashboard/:tableName?/:pageNum?" component={Dashboard} />
