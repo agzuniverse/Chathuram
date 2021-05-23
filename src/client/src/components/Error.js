@@ -4,14 +4,7 @@ import { ErrorContext } from '../Contexts';
 import "../css/errors.css"
 
 const Error = () => {
-    const { errorMessage, setErrorMessage } = useContext(ErrorContext)
-
-    // Setting error message to a blank string hides the error alert.
-    // This function exists only for semantic clarity, since clearError() makes more sense
-    // than setErrorMessage('')
-    const clearError = () => {
-        setErrorMessage('')
-    }
+    const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     return (
         errorMessage ?

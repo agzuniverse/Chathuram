@@ -15,7 +15,7 @@ const ConfigForm = ({ setDBConfig }) => {
     const [db_name, setDBName] = useState();
     const [db_type, setDBType] = useState(dbtypes[0]);
 
-    const { errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     const handleSubmit = async e => {
         e.preventDefault();

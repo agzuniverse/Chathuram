@@ -17,10 +17,17 @@ const App = () => {
   const { dbConfig, setDBConfig } = useDBConfig();
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Setting error message to a blank string hides the error alert.
+  // This function exists only for semantic clarity, since clearError() makes more sense
+  // than setErrorMessage('')
+  const clearError = () => {
+    setErrorMessage('');
+  }
+
   if (!token) {
     return (
       <>
-        <ErrorContext.Provider value={{ errorMessage, setErrorMessage }}>
+        <ErrorContext.Provider value={{ errorMessage, setErrorMessage, clearError }}>
           <Login setToken={setToken} />
           <Error />
         </ErrorContext.Provider>
@@ -31,7 +38,7 @@ const App = () => {
   if (!dbConfig) {
     return (
       <>
-        <ErrorContext.Provider value={{ errorMessage, setErrorMessage }}>
+        <ErrorContext.Provider value={{ errorMessage, setErrorMessage, clearError }}>
           <ConfigForm setDBConfig={setDBConfig} />
           <Error />
         </ErrorContext.Provider>
@@ -42,7 +49,7 @@ const App = () => {
   return (
     <div className="App">
       <Header />
-      <ErrorContext.Provider value={{ errorMessage, setErrorMessage }}>
+      <ErrorContext.Provider value={{ errorMessage, setErrorMessage, clearError }}>
         <BrowserRouter>
           <Switch>
             <Route path="/dashboard/:tableName?/:pageNum?" component={Dashboard} />

@@ -9,7 +9,7 @@ import '../css/forms.css'
 const Login = ({ setToken }) => {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
-    const { errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     const handleSubmit = async e => {
         e.preventDefault();

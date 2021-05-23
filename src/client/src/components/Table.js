@@ -18,7 +18,7 @@ const Row = (props) => {
 const Table = (props) => {
     const [tableData, setTableData] = useState()
     const [rowsSelected, setRowsSelected] = useState([])
-    const { errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     useEffect(() => {
         if (props.tableName)

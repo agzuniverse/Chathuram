@@ -80,7 +80,7 @@ const TextAreaField = ({ id, type, name, maxLength, value, required }) => {
 const AddToDBTable = (props) => {
     const [elements, setElements] = useState(null);
 
-    const { errorMessage, setErrorMessage } = useContext(ErrorContext)
+    const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     useEffect(() => {
         if (props.table) {
