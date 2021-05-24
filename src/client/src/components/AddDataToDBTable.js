@@ -159,8 +159,9 @@ const AddToDBTable = (props) => {
                     <Card.Body>
                         <FormContext.Provider value={{ handleChange }}>
                             <Form>
+                                {console.log("Elements:", elements)}
                                 {elements ? elements.map((column, index) => {
-                                    console.log("Elements", elements)
+                                    console.log("Type:", column.type)
                                     const formType = getInputType(column.type.toLowerCase())
                                     const maxLength = getMaxLength(column.type);
                                     const value = column.value ? column.value : null

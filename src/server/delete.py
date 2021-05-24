@@ -3,7 +3,7 @@ from flask import request
 import db
 from sqlalchemy import Table, MetaData
 from flask_cors import cross_origin
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, IntegrityError
 
 
 @app.route("/delete", methods=["POST"])
@@ -27,6 +27,8 @@ def delete_table_data():
             db.session.commit()
         except OperationalError as e:
             return {"error": "Failed to delete rows, {0}".format(e.orig)}, 400
+        except IntegrityError as e:
+            return {"error": "Failed to delete rows, {0}".format(e.orig)}, 400
     return {"message": "Successfully Deleted"}, 200
 
 
@@ -44,4 +46,6 @@ def delete_all_table_data():
         db.session.commit()
     except Exception as e:
         return {"error": "Failed to delete table, {0}".format(e.orig)}, 400
+    except IntegrityError as e:
+        return {"error": "Failed to delete rows, {0}".format(e.orig)}, 400
     return {"message": "Successfully Deleted All Rows"}, 200
