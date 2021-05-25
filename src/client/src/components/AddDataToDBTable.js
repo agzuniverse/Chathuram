@@ -8,7 +8,7 @@ const getInputType = (type) => {
     if (type.includes("varchar")) {
         return "text";
     }
-    if (type.includes("integer") || type.includes("float") || type.includes("decimal") || type.includes("smallint") || type.includes("bigint")) {
+    if (type.includes("integer") || type.includes("float") || type.includes("decimal") || type.includes("tinyint") ||type.includes("smallint") || type.includes("bigint")) {
         return "number";
     }
     if (type.includes("tinyint")) {
