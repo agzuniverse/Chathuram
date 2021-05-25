@@ -42,6 +42,17 @@ def pick_db_driver(db_type):
         return "mysql+pymysql"
 
 
+# Handle special cases in incoming data before insertion/updation
+def clean_data(row, table):
+    meta = get_metadata(table)
+    row_keys = list(row.keys())
+    for idx, col in enumerate(meta):
+        # BIT type in MySQL cannot take a string as input, so convert to int instead
+        if col["type"] == "BIT":
+            row[row_keys[idx]] = int(row[row_keys[idx]])
+    return row
+
+
 # Establish connection:
 def establish_connection(username, password, url, port, db_name, db_type):
     global session, insp, engine
