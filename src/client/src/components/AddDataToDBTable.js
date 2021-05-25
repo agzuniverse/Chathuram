@@ -11,7 +11,7 @@ const getInputType = (type) => {
     if (type.includes("integer") || type.includes("float") || type.includes("decimal") || type.includes("tinyint") ||type.includes("smallint") || type.includes("bigint")) {
         return "number";
     }
-    if (type.includes("tinyint")) {
+    if (type.includes("boolean")) {
         return "checkbox";
     }
     if (type.includes("dateandtime")) {
@@ -108,7 +108,14 @@ const AddToDBTable = (props) => {
     const handleSave = (event) => {
         event.preventDefault();
         let newRow = {}
-        elements.forEach(e => newRow[e.name] = e.value)
+        elements.forEach(e => {
+            // Special cases
+            // Default value for checkbox should be false unless specified
+            if (e.type == "BOOLEAN" && e.value == "") {
+                e.value = false
+            }
+            newRow[e.name] = e.value
+        })
         // An existing row is being updated
         if (props.oldRow) {
             let oldRow = {}
@@ -141,7 +148,7 @@ const AddToDBTable = (props) => {
             const { type, name } = element
             if (elementToChange === name) {
                 switch (type) {
-                    case "TINYINT":
+                    case "BOOLEAN":
                         element["value"] = event.target.checked;
                         break;
                     default:
