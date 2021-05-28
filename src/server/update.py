@@ -16,6 +16,8 @@ def update_table_data():
         return {"error": "Table does not exist"}, 400
     row = data.get("row")
     old_row = data.get("old_row")
+    db.clean_data(row, table)
+    db.clean_data(old_row, table)
     current_table = Table(table, MetaData(), autoload_with=db.engine)
     try:
         db.session.query(current_table).filter_by(**old_row).update(row)
