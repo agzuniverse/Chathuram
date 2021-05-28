@@ -15,6 +15,7 @@ def create_table_data():
     if table not in db.get_tables_in_db():
         return {"error": "Table does not exist"}, 400
     row = data.get("row")
+    db.clean_data(row, table)
     current_table = Table(table, MetaData(), autoload_with=db.engine)
     try:
         db.engine.execute(current_table.insert(), row)
