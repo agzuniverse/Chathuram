@@ -40,6 +40,8 @@ def get_metadata(table):
 def pick_db_driver(db_type):
     if db_type == "mysql":
         return "mysql+pymysql"
+    elif db_type == "postgres":
+        return "postgresql+psycopg2"
 
 
 # Handle special cases in incoming data before insertion/updation
