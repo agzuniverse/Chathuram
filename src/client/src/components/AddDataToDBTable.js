@@ -14,7 +14,7 @@ const getInputType = (type) => {
     if (type.includes("boolean")) {
         return "checkbox";
     }
-    if (type.includes("dateandtime")) {
+    if (type.includes("dateandtime") || (type.includes("timestamp"))) {
         return "datetime-local";
     }
     if (type.includes("date")) {
