@@ -9,6 +9,13 @@ function logout(e) {
     window.location.replace('/')
 }
 
+function resetConfig(e) {
+    if(e)
+        e.preventDefault()
+    localStorage.removeItem("dbConfig");
+    window.location.replace('/')
+}
+
 const Header = () => {
     
     return (
@@ -20,6 +27,7 @@ const Header = () => {
                     <Nav className="ml-auto">
                         <Nav.Link href="/dashboard">Dashboard</Nav.Link>
                         { localStorage.getItem("token") && <Nav.Link onClick={logout}>Logout</Nav.Link>}
+                        { localStorage.getItem("dbConfig") && <Nav.Link onClick={resetConfig}>Reset Config</Nav.Link>}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
