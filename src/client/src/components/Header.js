@@ -5,7 +5,7 @@ function logout(e) {
     console.log("inside logout function")
     if(e)
         e.preventDefault()
-    localStorage.clear()
+    localStorage.removeItem("token");
     window.location.replace('/')
 }
 
