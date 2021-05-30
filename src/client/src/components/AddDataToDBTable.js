@@ -23,6 +23,9 @@ const getInputType = (type) => {
     if (type.includes("time")) {
         return "time";
     }
+    if (type.includes("json")) {
+        return "json";
+    }
     return '';
 }
 
@@ -176,6 +179,18 @@ const AddToDBTable = (props) => {
                                     const required = !column.nullable
                                     let inputField;
                                     if (maxLength != null && maxLength > 20) {
+                                        inputField = <TextAreaField
+                                            key={name}
+                                            id={name}
+                                            type={formType}
+                                            name={name}
+                                            maxLength={maxLength}
+                                            value={value}
+                                            required={required}
+                                        />;
+                                    }
+                                    // TODO: When type is JSON, use an input field that supports JSON formatting
+                                    else if (formType == "json") {
                                         inputField = <TextAreaField
                                             key={name}
                                             id={name}
