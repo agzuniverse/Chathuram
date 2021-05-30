@@ -8,13 +8,13 @@ const getInputType = (type) => {
     if (type.includes("char") || type.includes("text")) {
         return "text";
     }
-    if (type.includes("integer") || type.includes("float") || type.includes("decimal") || type.includes("bit") || type.includes("int") || type.includes("double")) {
+    if (type.includes("integer") || type.includes("float") || type.includes("decimal") || type.includes("bit") || type.includes("int") || type.includes("double") || type.includes("year")) {
         return "number";
     }
     if (type.includes("boolean")) {
         return "checkbox";
     }
-    if (type.includes("dateandtime") || type.includes("timestamp") || type.includes("year")) {
+    if (type.includes("dateandtime") || type.includes("timestamp")) {
         return "datetime-local";
     }
     if (type.includes("date")) {
@@ -30,6 +30,11 @@ const getInputType = (type) => {
 }
 
 const getMaxLength = (type) => {
+    // Special cases
+    if (type.includes("year")) {
+        // Year inputs can be at most YYYY (4 characters)
+        return 4
+    }
     const regex = /\(([^)]*)\)$/;
     const maxLength = type.match(regex);
     return maxLength != null ? maxLength[1] : maxLength;
@@ -173,7 +178,7 @@ const AddToDBTable = (props) => {
                                 {elements ? elements.map((column, index) => {
                                     console.log("Type:", column.type)
                                     const formType = getInputType(column.type.toLowerCase())
-                                    const maxLength = getMaxLength(column.type);
+                                    const maxLength = getMaxLength(column.type.toLowerCase());
                                     const value = column.value ? column.value : null
                                     const name = column.name
                                     const required = !column.nullable
