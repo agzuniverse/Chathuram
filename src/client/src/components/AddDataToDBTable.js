@@ -5,7 +5,7 @@ import '../css/forms.css';
 import { FormContext, ErrorContext } from '../Contexts';
 
 const getInputType = (type) => {
-    if (type.includes("char") || type.includes("text")) {
+    if (type.includes("char") || type.includes("text") || type.includes("binary") || type.includes("blob")) {
         return "text";
     }
     if (type.includes("integer") || type.includes("float") || type.includes("decimal") || type.includes("bit") || type.includes("int") || type.includes("double") || type.includes("year")) {
@@ -29,11 +29,18 @@ const getInputType = (type) => {
     return '';
 }
 
+// When a data type has length greater than this, a textarea is shown instead of a single line text input.
+const MIN_LENGTH_FOR_TEXTAREA = 21
+
 const getMaxLength = (type) => {
     // Special cases
     if (type.includes("year")) {
         // Year inputs can be at most YYYY (4 characters)
         return 4
+    }
+    if (type.includes("blob")) {
+        // Blob types should always be shown in a textarea
+        return MIN_LENGTH_FOR_TEXTAREA
     }
     const regex = /\(([^)]*)\)$/;
     const maxLength = type.match(regex);
@@ -183,7 +190,7 @@ const AddToDBTable = (props) => {
                                     const name = column.name
                                     const required = !column.nullable
                                     let inputField;
-                                    if (maxLength != null && maxLength > 20) {
+                                    if (maxLength != null && maxLength >= MIN_LENGTH_FOR_TEXTAREA) {
                                         inputField = <TextAreaField
                                             key={name}
                                             id={name}
