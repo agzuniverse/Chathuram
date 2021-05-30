@@ -5,16 +5,16 @@ import '../css/forms.css';
 import { FormContext, ErrorContext } from '../Contexts';
 
 const getInputType = (type) => {
-    if (type.includes("varchar")) {
+    if (type.includes("char") || type.includes("text")) {
         return "text";
     }
-    if (type.includes("integer") || type.includes("float") || type.includes("decimal") || type.includes("tinyint") || type.includes("smallint") || type.includes("bigint") || type.includes("bit")) {
+    if (type.includes("integer") || type.includes("float") || type.includes("decimal") || type.includes("bit") || type.includes("int") || type.includes("double")) {
         return "number";
     }
     if (type.includes("boolean")) {
         return "checkbox";
     }
-    if (type.includes("dateandtime") || (type.includes("timestamp"))) {
+    if (type.includes("dateandtime") || type.includes("timestamp") || type.includes("year")) {
         return "datetime-local";
     }
     if (type.includes("date")) {
