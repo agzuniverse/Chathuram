@@ -23,7 +23,7 @@ const Table = (props) => {
     useEffect(() => {
         if (props.tableName) {
             clearError()
-            readData(props.tableName).then(data => {
+            readData(props.tableName, props.pageNum).then(data => {
                 if (data.error) {
                     setErrorMessage(data.error)
                 }
