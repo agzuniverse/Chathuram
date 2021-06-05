@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import Session
+from collections import defaultdict
 
 
 # Init database
@@ -26,6 +27,15 @@ def get_columns(self, table_name, schema=None, **kw):
     return col_defs
 
 
+def get_foreignkey(ins):
+    tables = get_tables_in_db()
+    fk_list = defaultdict(list)
+    for table in tables:
+        for fk in ins.get_foreign_keys(table):
+            fk_list[fk["referred_table"]].append(fk)
+    return fk_list
+
+
 # Return column metadata associated with a table
 def get_metadata(table):
     metadata = get_columns(insp, table)
@@ -33,6 +43,8 @@ def get_metadata(table):
     for col in metadata:
         col["type"] = str(col["type"])
         col["value"] = "" if col["default"] is None else col["default"]
+    # f_key = get_foreignkey(insp)[table]
+    # metadata.append(f_key)
     return metadata
 
 
