@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useHistory } from "react-router-dom";
 import testData from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
-import { Container, Pagination, Button } from 'react-bootstrap';
+import { Container, Pagination, Button, Modal } from 'react-bootstrap';
 import Delete from '@material-ui/icons/Delete';
 import { readData, removeAllRows, removeRow } from '../api';
 import { ErrorContext } from '../Contexts';
@@ -19,6 +19,12 @@ const Table = (props) => {
     const [tableData, setTableData] = useState()
     const [rowsSelected, setRowsSelected] = useState([])
     const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
+    const [show, setShow] = useState(false)
+    const deleteType = useRef()
+    const currentRow = useRef({})
+
+    const handleClose = () => setShow(false)
+    const handleShow = () => setShow(true)
 
     useEffect(() => {
         if (props.tableName) {
@@ -46,6 +52,10 @@ const Table = (props) => {
     }
 
     const deleteRow = (row) => {
+        // let fks = tableData.metadata.pop()
+        // console.log(fks)
+        console.log(row)
+        row = currentRow.current
         clearError()
         removeRow({ "table": props.tableName, "rows": [row] }).then(data => {
             if (data.error) {
@@ -61,6 +71,7 @@ const Table = (props) => {
                 })
             }
         })
+        handleClose()
     }
 
     const deleteAllRows = () => {
@@ -74,6 +85,7 @@ const Table = (props) => {
                     setTableData(data)
             })
         )
+        handleClose()
     }
 
     const deleteSelectedRows = () => {
@@ -90,10 +102,12 @@ const Table = (props) => {
                     setTableData(data)
             })
         })
+        handleClose()
     }
 
     const getKeys = () => {
         const keys = tableData.metadata?.map((meta, index) => meta.name);
+        // keys.pop()
         return keys;
     };
 
@@ -107,7 +121,10 @@ const Table = (props) => {
         return tableData.rows?.map((row, index) =>
             <tr key={index}>
                 <Row key={index} content={row} tableName={props.tableName} />
-                <td className="pointer"><Delete onClick={() => deleteRow(row)} /></td>
+                <td className="pointer"><Delete onClick={() => {
+                    currentRow.current = row;
+                    deleteType.current = deleteRow;
+                    tableData.metadata && handleShow();}} /></td>
                 <td>
                     <input
                         type="checkbox"
@@ -172,6 +189,28 @@ const Table = (props) => {
         )
     }
 
+    const getPopup = () => {
+        return (
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to delete? 
+                    <br></br>
+                    (This may result in loss of related rows) 
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="danger" onClick={deleteType.current}>
+                    Confirm
+                </Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+
     return (
         <Container style={{ marginTop: 40 }}>
             <ReactBootStrap.Table striped bordered hover>
@@ -184,14 +223,19 @@ const Table = (props) => {
             </ReactBootStrap.Table>
             <Button variant="primary" type="submit" id="delete-all-button" onClick={e => {
                 e.preventDefault();
-                deleteAllRows()
+                deleteType.current = deleteAllRows;
+                handleShow();
             }}>
                 Delete all rows</Button>
             <Button variant="primary" type="submit" id="delete-selected-button" onClick={e => {
                 e.preventDefault();
-                deleteSelectedRows()
+                deleteType.current = deleteSelectedRows;
+                handleShow();
             }}>
                 Delete selected rows</Button>
+            
+            {getPopup()}
+
             <div className="pagination-parent">
                 {tableData && (tableData.pages != 1) && getPagination()}
             </div>
