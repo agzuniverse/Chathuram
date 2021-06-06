@@ -7,7 +7,7 @@ import '../css/forms.css'
 
 const dbtypes = ['mysql', 'postgres'];
 
-const ConfigForm = ({ setDBConfig, dbConfig}) => {
+const ConfigForm = ({ setDBConfig, dbConfig }) => {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
     const [url, setURL] = useState();
@@ -18,16 +18,19 @@ const ConfigForm = ({ setDBConfig, dbConfig}) => {
     const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
 
     useEffect(() => {
-        setUserName(dbConfig?.username);
-        setURL(dbConfig?.url);
-        setPort(dbConfig?.port);
-        setDBType(dbConfig?.db_type);
-        setDBName(dbConfig?.db_name);
+        if (dbConfig) {
+            setUserName(dbConfig?.username);
+            setURL(dbConfig?.url);
+            setPort(dbConfig?.port);
+            setDBType(dbConfig?.db_type);
+            setDBName(dbConfig?.db_name);
+        }
     }, [dbConfig]);
 
     const handleSubmit = async e => {
         e.preventDefault();
         clearError()
+        console.log(username, password, url, port, db_name, db_type);
         const res = await setConfig({
             username,
             password,
@@ -81,7 +84,7 @@ const ConfigForm = ({ setDBConfig, dbConfig}) => {
                             </Form.Group>
                             <Form.Group controlId="exampleForm.SelectCustom">
                                 <Form.Label>DB Type</Form.Label>
-                                <Form.Control as="select" defaultValue={dbConfig?.db_type} custom onChange={e => setDBType(e.target.value)}>
+                                <Form.Control as="select" defaultValue={dbConfig ? dbConfig.db_type : dbtypes[0]} custom onChange={e => setDBType(e.target.value)}>
                                     {dbtypes.map((option, idx) => <option key={idx} value={option}>{option}</option>)}
                                 </Form.Control>
                             </Form.Group>
