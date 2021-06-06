@@ -14,6 +14,7 @@ export default function useDBConfig() {
 
     const saveDBConfig = dbConfig => {
         localStorage.setItem('dbConfig', JSON.stringify(dbConfig));
+        localStorage.setItem('dbConfigured', JSON.stringify(true));
         setDBConfig(dbConfig);
     };
 

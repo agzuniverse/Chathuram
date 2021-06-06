@@ -34,12 +34,11 @@ const App = () => {
       </>
     )
   }
-
-  if (!dbConfig) {
+  if (!JSON.parse(localStorage.getItem("dbConfigured"))) {
     return (
       <>
         <ErrorContext.Provider value={{ errorMessage, setErrorMessage, clearError }}>
-          <ConfigForm setDBConfig={setDBConfig} />
+          <ConfigForm setDBConfig={setDBConfig} dbConfig={dbConfig} />
           <Error />
         </ErrorContext.Provider>
       </>

@@ -12,7 +12,7 @@ function logout(e) {
 function resetConfig(e) {
     if(e)
         e.preventDefault()
-    localStorage.removeItem("dbConfig");
+    localStorage.removeItem("dbConfigured");
     window.location.replace('/')
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { setConfig } from '../api';
 import { Form, Button, Container, Card } from 'react-bootstrap';
 import { Header } from './Header';
@@ -7,7 +7,7 @@ import '../css/forms.css'
 
 const dbtypes = ['mysql', 'postgres'];
 
-const ConfigForm = ({ setDBConfig }) => {
+const ConfigForm = ({ setDBConfig, dbConfig}) => {
     const [username, setUserName] = useState();
     const [password, setPassword] = useState();
     const [url, setURL] = useState();
@@ -16,6 +16,14 @@ const ConfigForm = ({ setDBConfig }) => {
     const [db_type, setDBType] = useState(dbtypes[0]);
 
     const { errorMessage, setErrorMessage, clearError } = useContext(ErrorContext)
+
+    useEffect(() => {
+        setUserName(dbConfig?.username);
+        setURL(dbConfig?.url);
+        setPort(dbConfig?.port);
+        setDBType(dbConfig?.db_type);
+        setDBName(dbConfig?.db_name);
+    }, [dbConfig]);
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -32,7 +40,13 @@ const ConfigForm = ({ setDBConfig }) => {
             setErrorMessage(res.error)
         }
         else {
-            setDBConfig(res);
+            setDBConfig({
+                username,
+                url,
+                port,
+                db_name,
+                db_type
+            });
             // Redirect to dashboard on successfully establishing DB connection
             window.location.replace(`${window.location.origin}/dashboard`)
         }
@@ -47,7 +61,7 @@ const ConfigForm = ({ setDBConfig }) => {
                         <Form>
                             <Form.Group>
                                 <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter username" onChange={e => setUserName(e.target.value)} />
+                                <Form.Control type="text" placeholder="Enter username" defaultValue={dbConfig?.username} onChange={e => setUserName(e.target.value)} />
                             </Form.Group>
                             <Form.Group controlId="formBasicPassword">
                                 <Form.Label>Password</Form.Label>
@@ -55,19 +69,19 @@ const ConfigForm = ({ setDBConfig }) => {
                             </Form.Group>
                             <Form.Group controlId="formURL">
                                 <Form.Label>DB URL</Form.Label>
-                                <Form.Control type="text" placeholder="Enter DB URL" onChange={e => setURL(e.target.value)} />
+                                <Form.Control type="text" placeholder="Enter DB URL" defaultValue={dbConfig?.url} onChange={e => setURL(e.target.value)} />
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Port</Form.Label>
-                                <Form.Control type="text" placeholder="Enter port" onChange={e => setPort(e.target.value)} />
+                                <Form.Control type="text" placeholder="Enter port" defaultValue={dbConfig?.port} onChange={e => setPort(e.target.value)} />
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>DB Name</Form.Label>
-                                <Form.Control type="text" placeholder="Enter DB Name" onChange={e => setDBName(e.target.value)} />
+                                <Form.Control type="text" placeholder="Enter DB Name" defaultValue={dbConfig?.db_name} onChange={e => setDBName(e.target.value)} />
                             </Form.Group>
                             <Form.Group controlId="exampleForm.SelectCustom">
                                 <Form.Label>DB Type</Form.Label>
-                                <Form.Control as="select" custom onChange={e => setDBType(e.target.value)}>
+                                <Form.Control as="select" defaultValue={dbConfig?.db_type} custom onChange={e => setDBType(e.target.value)}>
                                     {dbtypes.map((option, idx) => <option key={idx} value={option}>{option}</option>)}
                                 </Form.Control>
                             </Form.Group>
