@@ -1,0 +1,13 @@
+div.container {
+    margin-top: 100px;
+}
+
+.full-btn {
+    width: 100%;
+}
+
+.table-form {
+    display: grid;
+    grid-template-columns: 30% 20% 50%;
+    justify-items: start;
+}

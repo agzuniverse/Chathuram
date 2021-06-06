@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  mysql_db:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: testdb
+      MYSQL_DATABASE: test
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+      
+  postgres_db:
+    image: postgres:13.3-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+  
+
+volumes:
+  mysql_data:
+  postgres_data:

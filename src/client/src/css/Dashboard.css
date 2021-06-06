@@ -1,0 +1,42 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 100% !important;
+  z-index: 100;
+  padding: 48px 0 0;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+}
+#sidebar-wrapper {
+  min-height: 100vh !important;
+  width: 20vw;
+  margin-left: -1rem;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+  transition: margin 0.25s ease-out;
+}
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#create-button, #delete-selected-button, #delete-all-button {
+  margin: 20px;
+  float: right;
+}
+
+#page-content-wrapper {
+  min-width: 0;
+  width: 100%;
+}
+.pointer {
+  cursor: pointer;
+}
+
+.pagination-parent {
+  margin-top: 5em;
+  display: grid;
+  place-items: center;
+}
