@@ -10,7 +10,7 @@ import jwt
 import os
 
 # Init app
-app = Flask(__name__)
+app = Flask(__name__, static_folder="fe")
 cors = CORS(app, supports_credentials=True)
 logging.getLogger("flask_cors").level = logging.DEBUG
 app.config["CORS_HEADERS"] = "Content-Type"
@@ -51,6 +51,8 @@ import meta  # noqa
 import tables  # noqa
 import delete  # noqa
 import login  # noqa
+import serve_static  # noqa
+
 
 if __name__ == "__main__":
     app.run(debug=True)

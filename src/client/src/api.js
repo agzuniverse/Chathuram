@@ -19,7 +19,11 @@ const isTokenExpired = () => {
 }
 
 export async function checkServerLife() {
-    return fetch(`${api}/life`).then(data => data.json())
+    return fetch(`${api}/life`, {
+        headers: {
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        }
+    }).then(data => data.json())
 }
 
 export async function loginUser(credentials) {
