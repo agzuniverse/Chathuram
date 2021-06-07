@@ -54,6 +54,7 @@ const App = () => {
             <Route path="/dashboard/:tableName?/:pageNum?" component={Dashboard} />
             <Route path="/edit" component={RowEditor} />
             <Route path="/create" component={RowCreator} />
+            <Route path="/" component={Dashboard} />
           </Switch>
         </BrowserRouter>
         <Error />
