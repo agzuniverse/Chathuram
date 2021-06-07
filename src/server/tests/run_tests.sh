@@ -4,7 +4,8 @@
 eval `pifpaf run postgresql`
 
 # Run the tests
-python3 test.py
+cd ../..
+python3 -m server.tests.test
 
 # Stop pifpaf
 pifpaf_stop
