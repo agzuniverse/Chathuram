@@ -42,6 +42,7 @@ def token_required(f):
     return decorated
 
 
+import life  # noqa
 import read  # noqa
 import update  # noqa
 import create  # noqa
