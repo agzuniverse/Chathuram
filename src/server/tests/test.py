@@ -8,12 +8,10 @@ from ..db import engine, session, insp
 
 class TestDB(unittest.TestCase):
     def add_data(self):
-        self.session.execute("insert into books values(1, 'Sapiens', 'Harari', false);")
-        self.session.execute("insert into books values(2, 'Meluha', 'Amish', true);")
-        self.session.execute(
-            "insert into books values(3, 'Harry Potter', 'Rowling', true);"
-        )
-        self.session.commit()
+        session.execute("insert into books values(1, 'Sapiens', 'Harari', false);")
+        session.execute("insert into books values(2, 'Meluha', 'Amish', true);")
+        session.execute("insert into books values(3, 'Harry Potter', 'Rowling', true);")
+        session.commit()
 
     def setUp(self):
         global engine
@@ -25,15 +23,15 @@ class TestDB(unittest.TestCase):
         engine = sqlalchemy.create_engine(url)
         session = Session(engine)
         insp = inspect(engine)
-        self.session.execute(
+        session.execute(
             "create table books(id int primary key, name varchar(20), author varchar(20), read boolean);"
         )
-        self.session.commit()
+        session.commit()
         self.add_data()
 
     def tearDown(self):
-        self.session.execute("drop table books;")
-        self.session.commit()
+        session.execute("drop table books;")
+        session.commit()
 
     def test_foobar(self):
         print(insp.get_table_names())
