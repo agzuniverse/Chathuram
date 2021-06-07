@@ -16,6 +16,9 @@ class TestDB(unittest.TestCase):
         self.session.commit()
 
     def setUp(self):
+        global engine
+        global session
+        global insp
         url = os.getenv("PIFPAF_POSTGRESQL_URL")
         if not url:
             self.skipTest("No database URL set")
