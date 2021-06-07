@@ -48,7 +48,8 @@ const ConfigForm = ({ setDBConfig, dbConfig }) => {
                 url,
                 port,
                 db_name,
-                db_type
+                db_type,
+                ...res
             });
             // Redirect to dashboard on successfully establishing DB connection
             window.location.replace(`${window.location.origin}/dashboard`)
