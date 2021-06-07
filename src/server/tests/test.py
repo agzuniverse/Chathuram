@@ -37,6 +37,7 @@ class TestDB(unittest.TestCase):
 
     def test_foobar(self):
         print(insp.get_table_names())
+        print(engine, session)
         self.assertTrue(insp.get_table_names())
 
 
