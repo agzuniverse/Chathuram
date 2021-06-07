@@ -1,6 +1,6 @@
-from __main__ import app, token_required
+from ..app.app import app, token_required
 from flask import request
-import db
+from ..db import db
 from sqlalchemy import Table, MetaData
 from flask_cors import cross_origin
 from sqlalchemy.exc import OperationalError, IntegrityError

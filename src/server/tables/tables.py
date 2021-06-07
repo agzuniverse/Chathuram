@@ -1,8 +1,8 @@
-from __main__ import (
+from ..app.app import (
     app,
     token_required,
 )
-import db
+from ..db import db
 from flask_cors import cross_origin
 
 

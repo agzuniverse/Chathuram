@@ -1,4 +1,4 @@
-from __main__ import (
+from ..app.app import (
     app,
 )
 from flask import request
