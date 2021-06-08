@@ -2,7 +2,7 @@ from __main__ import app, token_required
 from flask import request
 import db
 from sqlalchemy import Table, MetaData
-from sqlalchemy.exc import OperationalError, DataError
+from sqlalchemy.exc import OperationalError, DataError, IntegrityError
 from flask_cors import cross_origin
 
 
@@ -23,5 +23,5 @@ def update_table_data():
         db.session.query(current_table).filter_by(**old_row).update(row)
         db.session.commit()
         return {"message": "Successfully Updated"}, 200
-    except (DataError, OperationalError) as e:
+    except (DataError, OperationalError, IntegrityError) as e:
         return {"error": "Failed to update table, {0}".format(e.orig)}, 400
