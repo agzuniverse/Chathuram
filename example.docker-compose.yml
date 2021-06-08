@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  mysql_db:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: testdb
+      MYSQL_DATABASE: test
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    networks:
+      - chathuram_network
+
+  chathuram:
+    container_name: chathuram
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - chathuram_network
+
+  
+
+volumes:
+  mysql_data:
+
+networks:
+  chathuram_network:
+    driver: bridge
