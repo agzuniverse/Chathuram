@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-handler = Blueprint("handler", __name__, static_folder="fe")
+handler = Blueprint("handler", __name__, static_folder="../fe")
 
 from . import (  # noqa
     config,
