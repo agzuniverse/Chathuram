@@ -16,6 +16,7 @@ const Dashboard = (props) => {
         checkServerLife().then(data => {
             if (data.error) {
                 localStorage.removeItem('dbConfigured')
+                window.location.replace('/')
             }
         })
         // Going to URL with table name should result in that table's data being fetched
