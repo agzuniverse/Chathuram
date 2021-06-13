@@ -193,7 +193,7 @@ const Table = (props) => {
         return (
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                <Modal.Title>Modal heading</Modal.Title>
+                <Modal.Title>Confirm Delete</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>Are you sure you want to delete? 
                     <br></br>

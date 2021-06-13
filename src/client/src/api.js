@@ -18,6 +18,14 @@ const isTokenExpired = () => {
     }
 }
 
+export async function checkServerLife() {
+    return fetch(`${api}/life`, {
+        headers: {
+            "x-access-token": JSON.parse(localStorage.getItem('token')).token
+        }
+    }).then(data => data.json())
+}
+
 export async function loginUser(credentials) {
     return fetch(`${api}/login`, {
         method: 'POST',
@@ -62,10 +70,9 @@ export async function getTablesList() {
 }
 
 export async function readData(tableName, pageNum) {
-    if(pageNum === null || pageNum === undefined){
+    if (pageNum === null || pageNum === undefined) {
         pageNum = 1
     }
-    console.log(pageNum)
     isTokenExpired()
     return fetch(`${api}/read`, {
         method: 'POST',
@@ -73,7 +80,7 @@ export async function readData(tableName, pageNum) {
             'Content-Type': 'application/json',
             "x-access-token": JSON.parse(localStorage.getItem('token')).token
         },
-        body: JSON.stringify({ "table": tableName, "pageNum": pageNum})
+        body: JSON.stringify({ "table": tableName, "pageNum": pageNum })
     }).then(data => data.json())
 }
 
@@ -128,6 +135,6 @@ export async function removeAllRows(tableName) {
             'Content-Type': 'application/json',
             "x-access-token": JSON.parse(localStorage.getItem('token')).token
         },
-        body: JSON.stringify({"table": tableName})
+        body: JSON.stringify({ "table": tableName })
     }).then(data => data.json())
 }

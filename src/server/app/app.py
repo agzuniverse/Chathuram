@@ -10,7 +10,7 @@ import jwt
 import os
 
 # Init app
-app = Flask(__name__)
+app = Flask(__name__, static_folder="fe")
 cors = CORS(app, supports_credentials=True)
 logging.getLogger("flask_cors").level = logging.DEBUG
 app.config["CORS_HEADERS"] = "Content-Type"
@@ -41,6 +41,7 @@ def token_required(f):
 
     return decorated
 
+from ..life import life  # noqa
 from ..read import read  # noqa
 from ..update import update  # noqa
 from ..create import create  # noqa
@@ -49,6 +50,7 @@ from ..meta import meta  # noqa
 from ..tables import tables  # noqa
 from ..delete import delete  # noqa
 from ..login import login  # noqa
+from ..serve_static import serve_static  # noqa
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

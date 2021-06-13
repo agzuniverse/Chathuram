@@ -3,6 +3,7 @@ import { Container, Row, Col, Nav, Button } from 'react-bootstrap';
 import { useHistory } from "react-router-dom";
 import '../css/Dashboard.css'
 import Table from './Table';
+import { checkServerLife } from '../api';
 
 const Dashboard = (props) => {
     const history = useHistory()
@@ -10,8 +11,14 @@ const Dashboard = (props) => {
     const [tableName, setTableName] = useState(null)
     const [pageNum, setPageNum] = useState(null)
 
-    // Going to URL with table name should result in that table's data being fetched
     useEffect(() => {
+        // If the server loses connection with the DB, go back to DB config screen
+        checkServerLife().then(data => {
+            if (data.error) {
+                localStorage.removeItem('dbConfigured')
+            }
+        })
+        // Going to URL with table name should result in that table's data being fetched
         const { match: { params } } = props;
         if (params.tableName) {
             setTableName(params.tableName)
@@ -49,7 +56,7 @@ const Dashboard = (props) => {
                     }}>
                         Add Row
                     </Button>
-                    <Table tableName={tableName} pageNum={pageNum}/>
+                    <Table tableName={tableName} pageNum={pageNum} />
                 </Col>
             </Row>
         </Container>
