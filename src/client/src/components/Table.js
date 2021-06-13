@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useHistory } from "react-router-dom";
-import testData from './testData';
+import {testData} from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
 import { Container, Pagination, Button, Modal } from 'react-bootstrap';
 import Delete from '@material-ui/icons/Delete';

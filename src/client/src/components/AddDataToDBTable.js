@@ -3,6 +3,7 @@ import { Form, Button, Container, Card } from 'react-bootstrap';
 import { fetchMetaData, createData, updateData } from '../api';
 import '../css/forms.css';
 import { FormContext, ErrorContext } from '../Contexts';
+import { metaData } from './testData';
 
 const getInputType = (type) => {
     if (type.includes("char") || type.includes("text") || type.includes("binary") || type.includes("blob")) {
@@ -181,9 +182,7 @@ const AddToDBTable = (props) => {
                     <Card.Body>
                         <FormContext.Provider value={{ handleChange }}>
                             <Form>
-                                {console.log("Elements:", elements)}
                                 {elements ? elements.map((column, index) => {
-                                    console.log("Type:", column.type)
                                     const formType = getInputType(column.type.toLowerCase())
                                     const maxLength = getMaxLength(column.type.toLowerCase());
                                     const value = column.value ? column.value : null
@@ -253,36 +252,9 @@ const AddToDBTable = (props) => {
     }, [elements])
 }
 
-
-const testData = [{
-    type: "VARCHAR(30)",
-    nullable: false,
-    default: "testing",
-    name: "device_id",
-    comment: "Source tablet device ID"
-}, {
-    type: "DateAndTime",
-    nullable: true,
-    default: null,
-    name: "time",
-    comment: "Source tablet device ID"
-}, {
-    type: "tinyint",
-    nullable: false,
-    default: false,
-    name: "isSet",
-    comment: "Testing checkbox"
-}, {
-    type: "integer",
-    nullable: false,
-    default: "10",
-    name: "Number",
-    comment: "Testing checkbox"
-}]
-
 // To test with sample json data
 AddToDBTable.defaultProps = {
-    metadata: testData
+    metadata: metaData
 }
 
 
