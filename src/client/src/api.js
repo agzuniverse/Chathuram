@@ -73,7 +73,6 @@ export async function readData(tableName, pageNum) {
     if (pageNum === null || pageNum === undefined) {
         pageNum = 1
     }
-    console.log(pageNum)
     isTokenExpired()
     return fetch(`${api}/read`, {
         method: 'POST',
