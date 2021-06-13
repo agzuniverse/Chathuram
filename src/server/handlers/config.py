@@ -1,15 +1,12 @@
-from __main__ import (
-    app,
-    token_required,
-)
-
 import db
+from utils import token_required
 from flask import request
 from flask_cors import cross_origin
 from sqlalchemy.exc import OperationalError
+from . import handler
 
 
-@app.route("/config", methods=["POST"])
+@handler.route("/config", methods=["POST"])
 @cross_origin()
 @token_required
 def db_config():

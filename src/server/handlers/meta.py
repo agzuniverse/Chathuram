@@ -1,13 +1,11 @@
-from __main__ import (
-    app,
-    token_required,
-)
+from utils import token_required
 import db
 from flask import request
 from flask_cors import cross_origin
+from . import handler
 
 
-@app.route("/meta", methods=["POST"])
+@handler.route("/meta", methods=["POST"])
 @cross_origin()
 @token_required
 def get_table_metadata():

@@ -1,12 +1,10 @@
-from __main__ import (
-    app,
-    token_required,
-)
+from utils import token_required
 import db
 from flask_cors import cross_origin
+from . import handler
 
 
-@app.route("/life", methods=["GET"])
+@handler.route("/life", methods=["GET"])
 @cross_origin()
 @token_required
 def check_db_connection():

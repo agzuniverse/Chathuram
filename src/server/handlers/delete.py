@@ -1,12 +1,13 @@
-from __main__ import app, token_required
+from utils import token_required
 from flask import request
 import db
 from sqlalchemy import Table, MetaData
 from flask_cors import cross_origin
 from sqlalchemy.exc import OperationalError, IntegrityError
+from . import handler
 
 
-@app.route("/delete", methods=["POST"])
+@handler.route("/delete", methods=["POST"])
 @cross_origin()
 @token_required
 def delete_table_data():
@@ -30,7 +31,7 @@ def delete_table_data():
     return {"message": "Successfully Deleted"}, 200
 
 
-@app.route("/delete_all", methods=["POST"])
+@handler.route("/delete_all", methods=["POST"])
 @cross_origin()
 @token_required
 def delete_all_table_data():

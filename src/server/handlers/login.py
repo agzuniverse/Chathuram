@@ -1,20 +1,18 @@
-from __main__ import (
-    app,
-)
-from flask import request
+from flask import request, current_app
 from flask_cors import cross_origin
 import os
 import jwt
 import datetime
+from . import handler
 
 
-@app.route("/login", methods=["POST"])
+@handler.route("/login", methods=["POST"])
 @cross_origin()
 def login():
     username = os.getenv("LOGIN_USERNAME")
     password = os.getenv("LOGIN_PASSWORD")
 
-    if username is None or password is None or app.config["SECRET_KEY"] is None:
+    if username is None or password is None or current_app.config["SECRET_KEY"] is None:
         print("ERROR: Environment variables are improperly configured")
         return {"error": "Credentials are not configured in the server"}, 500
 
@@ -28,7 +26,7 @@ def login():
                 "username": username,
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=180),
             },
-            app.config["SECRET_KEY"],
+            current_app.config["SECRET_KEY"],
             algorithm="HS256",
         )
         return {"token": token}

@@ -1,12 +1,13 @@
-from __main__ import app, token_required
+from utils import token_required
 import db
 from flask import request
 from sqlalchemy import Table, MetaData
 from sqlalchemy.exc import OperationalError, DataError, IntegrityError
 from flask_cors import cross_origin
+from . import handler
 
 
-@app.route("/create", methods=["POST"])
+@handler.route("/create", methods=["POST"])
 @cross_origin()
 @token_required
 def create_table_data():

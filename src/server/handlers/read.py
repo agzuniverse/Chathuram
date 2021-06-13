@@ -1,14 +1,12 @@
-from __main__ import (
-    app,
-    token_required,
-)
+from utils import token_required
 import db
 from flask import request
 from sqlalchemy import Table, MetaData
 from flask_cors import cross_origin
+from . import handler
 
 
-@app.route("/read", methods=["POST"])
+@handler.route("/read", methods=["POST"])
 @cross_origin()
 @token_required
 def read_table_data():

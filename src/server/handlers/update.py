@@ -1,12 +1,13 @@
-from __main__ import app, token_required
+from utils import token_required
 from flask import request
 import db
 from sqlalchemy import Table, MetaData
 from sqlalchemy.exc import OperationalError, DataError, IntegrityError
 from flask_cors import cross_origin
+from . import handler
 
 
-@app.route("/update", methods=["POST"])
+@handler.route("/update", methods=["POST"])
 @cross_origin()
 @token_required
 def update_table_data():
