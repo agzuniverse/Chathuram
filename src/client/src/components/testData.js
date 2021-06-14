@@ -1,7 +1,7 @@
 const testData = [
     [1, "abc", "1999-05-11", "Wonder land", 1],
-    [2, "def", "1999-11-05", "Wonder land two", 0],
-    [3, "ghi", "1999-07-14", "Wonder land three", 1],
+    [2, "def", "2005-11-05", "Wonder land two", 0],
+    [3, "ghi", "1997-07-14", "Wonder land three", 1],
 ];
 
 const metaData = [
@@ -29,7 +29,7 @@ const metaData = [
     value: ""
 }, {
     name: "address",
-    type: "VARCHAR(250)",
+    type: "VARCHAR(21)",
     nullable: false,
     default: "Default Address",
     comment: "Source tablet device ID",

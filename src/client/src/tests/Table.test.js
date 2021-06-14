@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import Table from '../components/Table'
-import {testData, metaData} from '../components/testData'
+import {testData, metaData, tables} from '../components/testData'
 
 import {render, fireEvent, cleanup} from '@testing-library/react'
 import {rest} from 'msw'
@@ -10,15 +10,15 @@ import {setupServer} from 'msw/node'
 const api = "http://127.0.0.1:5000"
 
 const server = setupServer(
+  rest.get(`${api}/tables`, (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({"tables": tables}))
+  }),
   rest.post(`${api}/read`, (req, res, ctx) => {
     return res(
       ctx.status(200), 
       ctx.json({"metadata": metaData, "rows": testData, "pages": 1})
     )
-  }),
-  rest.post(`${api}/tables`, (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({"tables": tables}))
-  }),
+  })
 )
 
 beforeAll(() => server.listen())
@@ -32,7 +32,7 @@ test('Renders table', () => {
 
 test('Render table with prop', async() => {
     const userToken = {token:"someToken"}
-    const dbConfig = {"username":"admin","url":"localhost","port":"3306","db_name":"test","db_type":"mysql","tables":["books","table1","table2","toys"]}
+    const dbConfig = {"username":"admin","url":"localhost","port":"3306","db_name":"test","db_type":"mysql","tables":["tbl1","tbl2","tbl3"]}
     const dbConfigured = {dbConfigured:"true"}
     const tableName = "table1"
     localStorage.setItem('token', JSON.stringify(userToken));
