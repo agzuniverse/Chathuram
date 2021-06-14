@@ -10,6 +10,7 @@ sys.path.append(os.path.abspath(".."))
 
 from db import engine, session, insp  # noqa
 
+
 class TestDB(unittest.TestCase):
     def add_data(self):
         session.execute("insert into books values(1, 'Sapiens', 'Harari', false);")
