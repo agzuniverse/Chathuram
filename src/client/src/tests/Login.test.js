@@ -5,8 +5,22 @@ import useToken from '../hooks/useToken';
 
 import {render, fireEvent, cleanup} from '@testing-library/react';
 import { renderHook, act } from '@testing-library/react-hooks'
+import {rest} from 'msw'
+import {setupServer} from 'msw/node'
 
-afterEach(cleanup)
+const api = "http://127.0.0.1:5000"
+
+const server = setupServer(
+  rest.post(`${api}/login`, (req, res, ctx) => {
+    expect(req.body.username).toBe('user')
+    expect(req.body.password).toBe('pass')
+    return res(ctx.status(200), ctx.json({"token": "some_token"}))
+  })
+)
+
+beforeAll(() => server.listen())
+afterAll(() => server.close())
+afterEach(() => server.resetHandlers())
 
 test('renders login component', () => {
   const div = document.createElement("div")
