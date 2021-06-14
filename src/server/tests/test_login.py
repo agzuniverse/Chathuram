@@ -14,7 +14,7 @@ class TestLogin(unittest.TestCase):
         client = app.test_client()
         url = "/login"
 
-        mock_request_data = {"username": "admin", "password": "password"}
+        mock_request_data = {"username": "user", "password": "pass"}
 
         mock_request_headers = {"Content-Type": "application/json"}
 
