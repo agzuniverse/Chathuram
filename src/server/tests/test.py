@@ -1,10 +1,14 @@
 import unittest
 import os
+import sys
 import sqlalchemy
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.session import Session
-from ..db import engine, session, insp
 
+# Allow importing from one directory up
+sys.path.append(os.path.abspath(".."))
+
+from db import engine, session, insp  # noqa
 
 class TestDB(unittest.TestCase):
     def add_data(self):
