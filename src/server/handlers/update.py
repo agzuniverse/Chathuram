@@ -1,6 +1,6 @@
 from utils import token_required
 from flask import request
-from ..db import db
+import db
 from sqlalchemy import Table, MetaData
 from sqlalchemy.exc import OperationalError, DataError, IntegrityError
 from flask_cors import cross_origin
