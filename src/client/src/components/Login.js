@@ -21,7 +21,9 @@ const Login = ({ setToken }) => {
         if (token.error) {
             setErrorMessage(token.error)
         }
-        else setToken(token);
+        else {
+            setToken(token);
+        }
     }
 
     return (

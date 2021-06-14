@@ -1,8 +1,14 @@
+import sys
+import os
 import json
 import unittest
 import jwt
 import datetime
-from ..app.app import app
+
+# Allow importing from one directory up
+sys.path.append(os.path.abspath(".."))
+
+from app import app  # noqa
 
 
 class TestConfig(unittest.TestCase):
