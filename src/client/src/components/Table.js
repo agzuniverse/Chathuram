@@ -54,7 +54,6 @@ const Table = (props) => {
     const deleteRow = (row) => {
         // let fks = tableData.metadata.pop()
         // console.log(fks)
-        console.log(row)
         row = currentRow.current
         clearError()
         removeRow({ "table": props.tableName, "rows": [row] }).then(data => {
@@ -121,7 +120,7 @@ const Table = (props) => {
         return tableData.rows?.map((row, index) =>
             <tr key={index}>
                 <Row key={index} content={row} tableName={props.tableName} />
-                <td className="pointer"><Delete onClick={() => {
+                <td className="pointer"><Delete data-testid={"del"+index} onClick={() => {
                     currentRow.current = row;
                     deleteType.current = deleteRow;
                     tableData.metadata && handleShow();}} /></td>
@@ -203,7 +202,7 @@ const Table = (props) => {
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                <Button variant="danger" onClick={deleteType.current}>
+                <Button variant="danger" data-testid="confirm" onClick={deleteType.current}>
                     Confirm
                 </Button>
                 </Modal.Footer>
