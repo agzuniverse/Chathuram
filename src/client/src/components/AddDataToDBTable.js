@@ -130,16 +130,19 @@ const AddToDBTable = (props) => {
             if (e.type == "BOOLEAN" && e.value == "") {
                 e.value = false
             }
-            // only add those columns that does not have autoincrement set to true
-            if (!e.autoincrement)
-                newRow[e.name] = e.value
+            // If it is an autoincrement column, there is no need to send it's value to backend
+            // for new row creation.
+            if (e.autoincrement)
+                return
+            newRow[e.name] = e.value
         })
         // An existing row is being updated
         if (props.oldRow) {
             let oldRow = {}
-            elements.forEach((e, index) => { 
+            elements.forEach((e, index) => {
                 oldRow[e.name] = props.oldRow[index]
-                // if autoincrement is set to true then upon update that particular column value does not change
+                // For autoicrement columns the new value should be the same as the old value
+                // Since the user cannot manually change this value.
                 if (e.autoincrement)
                     newRow[e.name] = props.oldRow[index]
             })
@@ -200,7 +203,7 @@ const AddToDBTable = (props) => {
 
                                     // field is not displayed if autoincrement is set true 
                                     const disabled = column.autoincrement ? column.autoincrement : false
-                                 
+
                                     if (maxLength != null && maxLength >= MIN_LENGTH_FOR_TEXTAREA) {
                                         inputField = <TextAreaField
                                             key={name}
