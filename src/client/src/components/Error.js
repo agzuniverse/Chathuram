@@ -11,7 +11,7 @@ const Error = () => {
             <div className='fixedPositionErrorBox'>
                 <Alert variant='danger' onClose={() => clearError()} dismissible>
                     <Alert.Heading>Error</Alert.Heading>
-                    <p>
+                    <p data-testid="error">
                         {errorMessage}
                     </p>
                 </Alert>
