@@ -13,7 +13,6 @@ mimetypes.add_type("text/javascript", ".js")
 @handler.route("/", defaults={"path": ""})
 @handler.route("/<path:path>")
 def serve(path):
-    print(handler.static_folder)
     if path != "" and os.path.exists(handler.static_folder + "/" + path):
         return send_from_directory(handler.static_folder, path)
     else:
