@@ -130,12 +130,19 @@ const AddToDBTable = (props) => {
             if (e.type == "BOOLEAN" && e.value == "") {
                 e.value = false
             }
-            newRow[e.name] = e.value
+            // only add those columns that does not have autoincrement set to true
+            if (!e.autoincrement)
+                newRow[e.name] = e.value
         })
         // An existing row is being updated
         if (props.oldRow) {
             let oldRow = {}
-            elements.forEach((e, index) => oldRow[e.name] = props.oldRow[index])
+            elements.forEach((e, index) => { 
+                oldRow[e.name] = props.oldRow[index]
+                // if autoincrement is set to true then upon update that particular column value does not change
+                if (e.autoincrement)
+                    newRow[e.name] = props.oldRow[index]
+            })
             clearError()
             updateData({ tableName: props.table, oldRow, newRow }).then(data => {
                 if (data.error) {
@@ -146,6 +153,7 @@ const AddToDBTable = (props) => {
                     window.location.replace(`${window.location.origin}/dashboard/${props.table}`)
             })
         }
+        // A new row is being added
         else {
             clearError()
             createData({ tableName: props.table, newRow }).then(data => {
@@ -189,6 +197,10 @@ const AddToDBTable = (props) => {
                                     const name = column.name
                                     const required = !column.nullable
                                     let inputField;
+
+                                    // field is not displayed if autoincrement is set true 
+                                    const disabled = column.autoincrement ? column.autoincrement : false
+                                 
                                     if (maxLength != null && maxLength >= MIN_LENGTH_FOR_TEXTAREA) {
                                         inputField = <TextAreaField
                                             key={name}
@@ -236,8 +248,8 @@ const AddToDBTable = (props) => {
                                     return (
                                         <Form.Group key={index} className="table-form">
                                             <span></span>
-                                            <label key={index + 1} htmlFor={name}>{<strong>{name}</strong>}</label>
-                                            <span>{inputField}</span>
+                                            {!disabled && <label key={index + 1} htmlFor={name}>{<strong>{name}</strong>}</label>}
+                                            {!disabled && <span>{inputField}</span>}
                                         </Form.Group>);
                                 }) : null}
                                 <Button variant="dark" type="submit" onClick={event => handleSave(event)}>
