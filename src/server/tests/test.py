@@ -46,7 +46,7 @@ class TestDB(unittest.TestCase):
         print(engine, session)
         self.assertTrue(insp.get_table_names())
 
-    # integration test for config and read handlers
+    # integration test for read and config handlers
     def test_read(self):
         client = app.test_client()
         config_url = "/config"
@@ -75,7 +75,9 @@ class TestDB(unittest.TestCase):
         }
 
         client.post(
-            config_url, data=json.dumps(config_request_data), headers=mock_request_headers
+            config_url,
+            data=json.dumps(config_request_data),
+            headers=mock_request_headers,
         )
 
         url = "/read"
@@ -85,7 +87,7 @@ class TestDB(unittest.TestCase):
         )
         assert response.status_code == 200
 
-    # integration test for config and meta handlers
+    # integration test for meta and config handlers
     def test_meta(self):
         client = app.test_client()
         config_url = "/config"
@@ -114,7 +116,9 @@ class TestDB(unittest.TestCase):
         }
 
         client.post(
-            config_url, data=json.dumps(config_request_data), headers=mock_request_headers
+            config_url,
+            data=json.dumps(config_request_data),
+            headers=mock_request_headers,
         )
 
         url = "/meta"
@@ -122,6 +126,44 @@ class TestDB(unittest.TestCase):
         response = client.post(
             url, data=json.dumps(mock_request_data), headers=mock_request_headers
         )
+        assert response.status_code == 200
+
+    # integration test for tables and config handlers
+    def test_tables(self):
+        client = app.test_client()
+        config_url = "/config"
+
+        token = jwt.encode(
+            {
+                "username": "user",
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=180),
+            },
+            app.config["SECRET_KEY"],
+            algorithm="HS256",
+        )
+
+        config_request_data = {
+            "username": "admin",
+            "password": "password",
+            "url": "localhost",
+            "port": 5432,
+            "db_name": "test",
+            "db_type": "postgres",
+        }
+
+        mock_request_headers = {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+        }
+
+        client.post(
+            config_url,
+            data=json.dumps(config_request_data),
+            headers=mock_request_headers,
+        )
+
+        url = "/tables"
+        response = client.get(url, headers=mock_request_headers)
         assert response.status_code == 200
 
 
