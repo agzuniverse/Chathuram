@@ -78,7 +78,6 @@ def establish_connection(username, password, url, port, db_name, db_type):
     )
     session = Session(engine)
     insp = inspect(engine)
-    print(session, insp, engine)
     return True
 
     # Create classes that map to the tables
