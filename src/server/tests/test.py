@@ -42,7 +42,7 @@ class TestDB(unittest.TestCase):
         session.commit()
 
     def test_foobar(self):
-        self.assertTrue('books' in insp.get_table_names())
+        self.assertTrue("books" in insp.get_table_names())
 
     # integration test for read and config handlers
     def test_read(self):
