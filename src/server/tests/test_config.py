@@ -5,6 +5,8 @@ import unittest
 import jwt
 import datetime
 
+from dotenv import load_dotenv
+
 # Allow importing from one directory up
 sys.path.append(os.path.abspath(".."))
 
@@ -12,13 +14,15 @@ from app import app  # noqa
 
 
 class TestConfig(unittest.TestCase):
+    def setUp(self):
+        load_dotenv(dotenv_path="../.env")
+
     def test_config_route__success(self):
         client = app.test_client()
         url = "/config"
-
         token = jwt.encode(
             {
-                "username": "user",
+                "username": os.getenv("LOGIN_USERNAME"),
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=180),
             },
             app.config["SECRET_KEY"],
@@ -48,22 +52,30 @@ class TestConfig(unittest.TestCase):
         client = app.test_client()
         url = "/config"
 
-        mock_request_data = {"username": "user", "password": "pass"}
-
-        mock_request_headers = {"Content-Type": "application/json"}
+        mock_request_data = {
+            "username": "admin",
+            "password": "password",
+            "url": "localhost",
+            "port": 3306,
+            "db_name": "test",
+            "db_type": "mysql",
+        }
+        mock_request_headers = {
+            "Content-Type": "application/json",
+        }
 
         response = client.post(
             url, data=json.dumps(mock_request_data), headers=mock_request_headers
         )
+        print(response.status_code)
         assert response.status_code == 401
 
     def test_config_route__failure__bad_request(self):
         client = app.test_client()
         url = "/config"
-
         token = jwt.encode(
             {
-                "username": "user",
+                "username": os.getenv("LOGIN_USERNAME"),
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=180),
             },
             app.config["SECRET_KEY"],

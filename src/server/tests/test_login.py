@@ -3,6 +3,8 @@ import sys
 import json
 import unittest
 
+from dotenv import load_dotenv
+
 # Allow importing from one directory up
 sys.path.append(os.path.abspath(".."))
 
@@ -13,8 +15,11 @@ class TestLogin(unittest.TestCase):
     def test_login_route__success(self):
         client = app.test_client()
         url = "/login"
-
-        mock_request_data = {"username": "user", "password": "pass"}
+        load_dotenv(dotenv_path="../.env")
+        mock_request_data = {
+            "username": os.getenv("LOGIN_USERNAME"),
+            "password": os.getenv("LOGIN_PASSWORD"),
+        }
 
         mock_request_headers = {"Content-Type": "application/json"}
 
@@ -27,7 +32,10 @@ class TestLogin(unittest.TestCase):
         client = app.test_client()
         url = "/login"
 
-        mock_request_data = {}
+        mock_request_data = {
+            "username": "incorrect_username",
+            "password": "wrong_password",
+        }
 
         mock_request_headers = {"Content-Type": "application/json"}
 
