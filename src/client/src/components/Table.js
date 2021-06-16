@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useHistory } from "react-router-dom";
-import {testData} from './testData';
+import { testData } from './testData';
 import * as ReactBootStrap from 'react-bootstrap';
 import { Container, Pagination, Button, Modal } from 'react-bootstrap';
 import Delete from '@material-ui/icons/Delete';
@@ -52,8 +52,6 @@ const Table = (props) => {
     }
 
     const deleteRow = (row) => {
-        // let fks = tableData.metadata.pop()
-        // console.log(fks)
         row = currentRow.current
         clearError()
         removeRow({ "table": props.tableName, "rows": [row] }).then(data => {
@@ -106,7 +104,6 @@ const Table = (props) => {
 
     const getKeys = () => {
         const keys = tableData.metadata?.map((meta, index) => meta.name);
-        // keys.pop()
         return keys;
     };
 
@@ -120,10 +117,11 @@ const Table = (props) => {
         return tableData.rows?.map((row, index) =>
             <tr key={index}>
                 <Row key={index} content={row} tableName={props.tableName} />
-                <td className="pointer"><Delete data-testid={"del"+index} onClick={() => {
+                <td className="pointer"><Delete data-testid={"del" + index} onClick={() => {
                     currentRow.current = row;
                     deleteType.current = deleteRow;
-                    tableData.metadata && handleShow();}} /></td>
+                    tableData.metadata && handleShow();
+                }} /></td>
                 <td>
                     <input
                         type="checkbox"
@@ -192,18 +190,18 @@ const Table = (props) => {
         return (
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                <Modal.Title>Confirm Delete</Modal.Title>
+                    <Modal.Title>Confirm Delete</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Are you sure you want to delete? 
+                <Modal.Body>Are you sure you want to delete?
                     <br></br>
-                    (This may result in loss of related rows) 
+                    (This may result in loss of related rows)
                 </Modal.Body>
                 <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
                 </Button>
-                <Button variant="danger" data-testid="confirm" onClick={deleteType.current}>
-                    Confirm
+                    <Button variant="danger" data-testid="confirm" onClick={deleteType.current}>
+                        Confirm
                 </Button>
                 </Modal.Footer>
             </Modal>
@@ -232,7 +230,7 @@ const Table = (props) => {
                 handleShow();
             }}>
                 Delete selected rows</Button>
-            
+
             {getPopup()}
 
             <div className="pagination-parent">
