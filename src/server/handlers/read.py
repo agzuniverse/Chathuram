@@ -25,6 +25,7 @@ def read_table_data():
     else:
         pages = size // per_page + 1
     data = db.session.query(current_table).all()[page_num : page_num + per_page]
+    db.session.commit()
     metadata = db.get_metadata(table)
     result = []
     for row in data:
