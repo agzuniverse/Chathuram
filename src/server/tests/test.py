@@ -25,7 +25,7 @@ class TestDB(unittest.TestCase):
         global engine
         global session
         global insp
-        url = os.getenv("PIFPAF_POSTGRESQL_URL")
+        url = os.getenv("DB_URL")
         if not url:
             self.skipTest("No database URL set")
         engine = sqlalchemy.create_engine(url)
