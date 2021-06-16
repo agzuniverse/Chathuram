@@ -14,7 +14,7 @@ from handlers import handler
 sys.path.append(os.path.abspath("."))
 
 # Init app
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 cors = CORS(app, supports_credentials=True)
 logging.getLogger("flask_cors").level = logging.DEBUG
 app.config["CORS_HEADERS"] = "Content-Type"
