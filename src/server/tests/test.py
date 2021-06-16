@@ -166,6 +166,55 @@ class TestDB(unittest.TestCase):
         response = client.get(url, headers=mock_request_headers)
         assert response.status_code == 200
 
+    # integration test for create and config handlers
+    def test_create(self):
+        client = app.test_client()
+        config_url = "/config"
+
+        token = jwt.encode(
+            {
+                "username": "user",
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=180),
+            },
+            app.config["SECRET_KEY"],
+            algorithm="HS256",
+        )
+
+        config_request_data = {
+            "username": "admin",
+            "password": "password",
+            "url": "localhost",
+            "port": 5432,
+            "db_name": "test",
+            "db_type": "postgres",
+        }
+
+        mock_request_headers = {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+        }
+
+        client.post(
+            config_url,
+            data=json.dumps(config_request_data),
+            headers=mock_request_headers,
+        )
+
+        url = "/create"
+        mock_request_data = {
+            "table": "books",
+            "row": {
+                "id": "4",
+                "name": "The Famous Five",
+                "author": "Enid Blyton",
+                "read": True,
+            },
+        }
+        response = client.post(
+            url, data=json.dumps(mock_request_data), headers=mock_request_headers
+        )
+        assert response.status_code == 200
+
 
 if __name__ == "__main__":
     unittest.main()
